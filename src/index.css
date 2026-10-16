@@ -1,0 +1,191 @@
+/* ─── Tailwind Directives ───────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Custom Properties (Brand Tokens) ─────────────────────────────── */
+@layer base {
+  :root {
+    /* Primária — Navy */
+    --color-navy-950: #091B33;
+    --color-navy-900: #0F2A4A;
+    --color-navy-800: #163568;
+    --color-navy-700: #1E4380;
+    --color-navy-600: #2D5A96;
+    --color-navy-500: #3B6AA6;
+
+    /* Destaque — Âmbar/Dourado */
+    --color-gold-700: #A07520;
+    --color-gold-600: #B5862A;
+    --color-gold-500: #C9952A;
+    --color-gold-400: #D9A840;
+    --color-gold-300: #E8BC60;
+    --color-gold-100: #F8EDD0;
+
+    /* Neutros Quentes */
+    --color-white:    #FFFFFF;
+    --color-warm-50:  #F8F5F0;
+    --color-warm-100: #F0EDE8;
+    --color-warm-200: #E0DBD3;
+    --color-warm-400: #9B9B8E;
+    --color-warm-700: #3A3A32;
+    --color-warm-900: #1A1A14;
+
+    /* Semânticas */
+    --color-success:  #2D6A4F;
+    --color-error:    #C0202A;
+    --color-warning:  #D4801A;
+
+    /* Tipografia */
+    --font-serif: "Playfair Display", Georgia, serif;
+    --font-sans:  "Inter", system-ui, sans-serif;
+
+    /* Raios de borda */
+    --radius-sm:  6px;
+    --radius-md:  10px;
+    --radius-lg:  16px;
+    --radius-xl:  24px;
+
+    /* Sombras */
+    --shadow-card:       0 2px 16px 0 rgba(15,42,74,0.08);
+    --shadow-card-hover: 0 8px 32px 0 rgba(15,42,74,0.14);
+
+    /* Transição padrão */
+    --transition: 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* ─── Reset e Base ─────────────────────────────────────────────────────── */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-white);
+    color: var(--color-warm-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.65;
+  }
+
+  /* ─── Focus Acessível ──────────────────────────────────────────────────── */
+  :focus-visible {
+    outline: 3px solid var(--color-gold-500);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* ─── Scrollbar sutil ─────────────────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--color-warm-50); }
+  ::-webkit-scrollbar-thumb { background: var(--color-warm-300); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-navy-600); }
+}
+
+/* ─── Component Layer ───────────────────────────────────────────────────── */
+@layer components {
+
+  /* Botões */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 font-sans font-medium text-sm leading-none
+           transition-all duration-200 cursor-pointer select-none;
+    border-radius: var(--radius-md);
+  }
+
+  .btn-primary {
+    @apply btn px-6 py-3 text-white;
+    background-color: var(--color-gold-500);
+  }
+  .btn-primary:hover { background-color: var(--color-gold-600); }
+  .btn-primary:active { background-color: var(--color-gold-700); }
+
+  .btn-secondary {
+    @apply btn px-6 py-3 text-white;
+    background-color: var(--color-navy-900);
+  }
+  .btn-secondary:hover { background-color: var(--color-navy-800); }
+
+  .btn-ghost {
+    @apply btn px-6 py-3;
+    border: 1.5px solid var(--color-navy-900);
+    color: var(--color-navy-900);
+    background-color: transparent;
+  }
+  .btn-ghost:hover { background-color: var(--color-warm-50); }
+
+  .btn-ghost-gold {
+    @apply btn px-6 py-3;
+    border: 1.5px solid var(--color-gold-500);
+    color: var(--color-gold-600);
+    background-color: transparent;
+  }
+  .btn-ghost-gold:hover { background-color: var(--color-gold-100); }
+
+  /* Inputs */
+  .input-field {
+    @apply w-full font-sans text-sm px-4 py-3;
+    border: 1.5px solid var(--color-warm-200);
+    border-radius: var(--radius-md);
+    background-color: var(--color-white);
+    color: var(--color-warm-900);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+  }
+  .input-field::placeholder { color: var(--color-warm-400); }
+  .input-field:focus {
+    border-color: var(--color-gold-500);
+    box-shadow: 0 0 0 3px rgba(201,149,42,0.18);
+  }
+
+  /* Badge de tipo de imóvel */
+  .badge {
+    @apply inline-flex items-center font-sans text-xs font-semibold tracking-wide uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .badge-venda   { background: var(--color-navy-900); color: #fff; }
+  .badge-aluguel { background: var(--color-gold-500); color: #fff; }
+  .badge-lancamento { background: var(--color-success); color: #fff; }
+  .badge-exclusivo  { background: var(--color-warm-900); color: #fff; }
+
+  /* Tag de perfil/filtro */
+  .tag {
+    @apply inline-flex items-center gap-1.5 font-sans text-xs font-medium cursor-pointer;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-warm-200);
+    color: var(--color-warm-600);
+    background: var(--color-white);
+    transition: all var(--transition);
+  }
+  .tag:hover, .tag.active {
+    border-color: var(--color-navy-900);
+    color: var(--color-navy-900);
+    background: var(--color-navy-50);
+  }
+
+  /* Card de imóvel */
+  .property-card {
+    @apply flex flex-col overflow-hidden;
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow var(--transition), transform var(--transition);
+  }
+  .property-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+  }
+}
+
+/* ─── Utility extras ────────────────────────────────────────────────────── */
+@layer utilities {
+  .font-serif { font-family: var(--font-serif); }
+  .text-balance { text-wrap: balance; }
+  .section-padding { @apply py-20 px-6; }
+  .container-brand { @apply max-w-content mx-auto; }
+}
