@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   BedDouble,
@@ -21,11 +21,60 @@ import { PROPERTIES } from '../../data'
 import { useFavorites } from '../../hooks/useFavorites'
 import toast from 'react-hot-toast'
 import { submitPropertyInquiry } from '../../lib/api'
+import { supabase } from '../../lib/supabase'
 
 export default function PropertyDetailPage() {
   const { id } = useParams()
-  const property = PROPERTIES.find(p => String(p.id) === String(id))
+  const [property, setProperty] = useState(null)
+  const [loading, setLoading] = useState(true)
   const { toggleFavorite, isFavorite } = useFavorites()
+
+  // Buscar imóvel do Supabase
+  useEffect(() => {
+    async function fetchProperty() {
+      try {
+        const { data, error } = await supabase
+          .from('properties')
+          .select('*')
+          .eq('id', id)
+          .single()
+        
+        if (error) {
+          console.error('Erro ao buscar imóvel:', error)
+          // Fallback para dados locais
+          const localProperty = PROPERTIES.find(p => String(p.id) === String(id))
+          setProperty(localProperty)
+        } else {
+          // Mapear dados
+          setProperty({
+            id: data.id,
+            title: data.title,
+            type: data.type,
+            priceNum: Number(data.price_num),
+            priceDisplay: data.price_display,
+            neighborhood: data.neighborhood,
+            address: data.address,
+            beds: data.beds || 0,
+            baths: data.baths || 0,
+            parking: data.parking || 0,
+            area: data.area,
+            image: data.image,
+            highlight: data.featured ? 'Destaque' : null,
+            tags: data.tags || [],
+            description: data.description
+          })
+        }
+      } catch (error) {
+        console.error('Erro ao buscar imóvel:', error)
+        const localProperty = PROPERTIES.find(p => String(p.id) === String(id))
+        setProperty(localProperty)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchProperty()
+  }, [id])
 
   const [currentImg, setCurrentImg] = useState(0)
   const [interestForm, setInterestForm] = useState({
@@ -37,6 +86,19 @@ export default function PropertyDetailPage() {
   const [renda, setRenda] = useState(15000)
   const [formSent, setFormSent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  if (loading) {
+    return (
+      <>
+        <SEOHelmet title="Carregando..." />
+        <Header />
+        <main className="bg-warm-50 pt-36 pb-28 min-h-screen flex items-center justify-center">
+          <p>Carregando...</p>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   if (!property) {
     return (

@@ -130,8 +130,18 @@ export default function ListingPage() {
     if (filters.bairros.length > 0) {
       list = list.filter(p => filters.bairros.includes(p.neighborhood))
     }
-    if (filters.precoMin) list = list.filter(p => p.priceNum >= Number(filters.precoMin.replace(/\D/g, '')))
-    if (filters.precoMax) list = list.filter(p => p.priceNum <= Number(filters.precoMax.replace(/\D/g, '')))
+    if (filters.precoMin) {
+      const min = Number(filters.precoMin.replace(/\D/g, ''))
+      if (!isNaN(min) && min > 0) {
+        list = list.filter(p => p.priceNum >= min)
+      }
+    }
+    if (filters.precoMax) {
+      const max = Number(filters.precoMax.replace(/\D/g, ''))
+      if (!isNaN(max) && max > 0) {
+        list = list.filter(p => p.priceNum <= max)
+      }
+    }
     if (sort === 'menor') list.sort((a, b) => a.priceNum - b.priceNum)
     if (sort === 'maior') list.sort((a, b) => b.priceNum - a.priceNum)
     return list
