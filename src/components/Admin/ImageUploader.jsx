@@ -4,52 +4,84 @@ import { supabase } from '../../lib/supabase'
 import { Upload, X, Image as ImageIcon } from 'lucide-react'
 import toast from 'react-hot-toast'
 
+const BUCKET = 'property-images'
+const MAX_SIZE_MB = 5
+
 export default function ImageUploader({ propertyId, onImagesChange, existingImages = [] }) {
   const [uploading, setUploading] = useState(false)
   const [images, setImages] = useState(existingImages)
 
-  const onDrop = useCallback(async (acceptedFiles) => {
-    setUploading(true)
-    
-    try {
-      const uploadPromises = acceptedFiles.map(async (file) => {
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Math.random()}.${fileExt}`
-        const filePath = `properties/${propertyId}/${fileName}`
+  const onDrop = useCallback(
+    async (acceptedFiles, fileRejections) => {
+      if (fileRejections?.length > 0) {
+        toast.error('Alguns arquivos foram recusados (tipo inválido, tamanho ou limite de 10 imagens)')
+      }
+      if (acceptedFiles.length === 0) return
 
-        const { error: uploadError } = await supabase.storage
-          .from('property-images')
-          .upload(filePath, file)
+      if (images.length + acceptedFiles.length > 10) {
+        toast.error('Máximo de 10 imagens por imóvel')
+        return
+      }
 
-        if (uploadError) throw uploadError
+      setUploading(true)
 
-        const { data } = supabase.storage
-          .from('property-images')
-          .getPublicUrl(filePath)
+      // Imóvel novo ainda não tem ID: usa uma pasta temporária única
+      const folder = propertyId || `new-${crypto.randomUUID()}`
 
-        return data.publicUrl
-      })
+      const results = await Promise.allSettled(
+        acceptedFiles.map(async (file) => {
+          const fileExt = (file.name.split('.').pop() || 'jpg').toLowerCase()
+          const filePath = `properties/${folder}/${crypto.randomUUID()}.${fileExt}`
 
-      const uploadedUrls = await Promise.all(uploadPromises)
-      const newImages = [...images, ...uploadedUrls]
-      setImages(newImages)
-      onImagesChange(newImages)
-      toast.success('Imagens enviadas com sucesso')
-    } catch (error) {
-      toast.error('Erro ao enviar imagens')
-      console.error(error)
-    } finally {
+          const { error: uploadError } = await supabase.storage
+            .from(BUCKET)
+            .upload(filePath, file, {
+              contentType: file.type,
+              cacheControl: '3600',
+              upsert: false,
+            })
+
+          if (uploadError) throw uploadError
+
+          const { data } = supabase.storage.from(BUCKET).getPublicUrl(filePath)
+          return data.publicUrl
+        })
+      )
+
+      const uploadedUrls = results
+        .filter((r) => r.status === 'fulfilled')
+        .map((r) => r.value)
+
+      const failed = results.filter((r) => r.status === 'rejected')
+      failed.forEach((r) => console.error('Erro no upload:', r.reason))
+
+      if (uploadedUrls.length > 0) {
+        const newImages = [...images, ...uploadedUrls]
+        setImages(newImages)
+        onImagesChange(newImages)
+        toast.success(`${uploadedUrls.length} imagem(ns) enviada(s)`)
+      }
+
+      if (failed.length > 0) {
+        const msg = failed[0].reason?.message || 'Erro desconhecido'
+        toast.error(`Falha em ${failed.length} imagem(ns): ${msg}`)
+      }
+
       setUploading(false)
-    }
-  }, [propertyId, images, onImagesChange])
+    },
+    [propertyId, images, onImagesChange]
+  )
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+      'image/jpeg': ['.jpeg', '.jpg'],
+      'image/png': ['.png'],
+      'image/webp': ['.webp'],
     },
     maxFiles: 10,
-    disabled: uploading
+    maxSize: MAX_SIZE_MB * 1024 * 1024,
+    disabled: uploading,
   })
 
   const removeImage = (index) => {
@@ -74,7 +106,9 @@ export default function ImageUploader({ propertyId, onImagesChange, existingImag
           <p className="text-warm-500">
             Arraste imagens aqui ou clique para selecionar
             <br />
-            <span className="text-xs text-warm-400">Máximo 10 imagens (JPEG, PNG, WebP)</span>
+            <span className="text-xs text-warm-400">
+              Máximo 10 imagens, até {MAX_SIZE_MB} MB cada (JPEG, PNG, WebP)
+            </span>
           </p>
         )}
       </div>
@@ -82,13 +116,14 @@ export default function ImageUploader({ propertyId, onImagesChange, existingImag
       {images.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {images.map((url, index) => (
-            <div key={index} className="relative group">
+            <div key={url} className="relative group">
               <img
                 src={url}
-                alt={`Property image ${index + 1}`}
+                alt={`Imagem do imóvel ${index + 1}`}
                 className="w-full h-32 object-cover rounded-lg"
               />
               <button
+                type="button"
                 onClick={() => removeImage(index)}
                 className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
               >

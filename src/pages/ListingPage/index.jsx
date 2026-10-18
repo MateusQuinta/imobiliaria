@@ -7,12 +7,15 @@ import SEOHelmet from '../../components/SEOHelmet'
 import LazyImage from '../../components/LazyImage'
 import { PROPERTIES, NEIGHBORHOODS } from '../../data'
 import { useFavorites } from '../../hooks/useFavorites'
+import { supabase } from '../../lib/supabase'
 
 export default function ListingPage() {
   const [searchParams] = useSearchParams()
   const paramTipo = searchParams.get('tipo') || 'todos'
   const paramCategoria = searchParams.get('categoria')
   const { toggleFavorite, isFavorite, favoriteCount } = useFavorites()
+  const [properties, setProperties] = useState([])
+  const [loading, setLoading] = useState(true)
 
   const [filters, setFilters] = useState({
     tipo: paramTipo,
@@ -34,6 +37,51 @@ export default function ListingPage() {
     }))
   }, [searchParams])
 
+  // Buscar imóveis do Supabase
+  useEffect(() => {
+    async function fetchProperties() {
+      try {
+        const { data, error } = await supabase
+          .from('properties')
+          .select('*')
+          .eq('status', 'ativo')
+          .order('created_at', { ascending: false })
+        
+        if (error) {
+          console.error('Erro ao buscar imóveis:', error)
+          // Fallback para dados locais se Supabase falhar
+          setProperties(PROPERTIES)
+        } else {
+          // Mapear dados do Supabase para o formato esperado
+          const mapped = data.map(p => ({
+            id: p.id,
+            title: p.title,
+            type: p.type,
+            priceNum: Number(p.price_num),
+            priceDisplay: p.price_display,
+            neighborhood: p.neighborhood,
+            address: p.address,
+            beds: p.beds || 0,
+            baths: p.baths || 0,
+            parking: p.parking || 0,
+            area: p.area,
+            image: p.image,
+            highlight: p.featured ? 'Destaque' : null,
+            tags: p.tags || []
+          }))
+          setProperties(mapped)
+        }
+      } catch (error) {
+        console.error('Erro ao buscar imóveis:', error)
+        setProperties(PROPERTIES)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchProperties()
+  }, [])
+
   const [sort, setSort] = useState('relevancia')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
@@ -54,7 +102,7 @@ export default function ListingPage() {
   const VAGAS_OPTS = ['Qualquer', '1+', '2+', '3+']
 
   const filtered = useMemo(() => {
-    let list = [...PROPERTIES]
+    let list = [...properties]
     if (filters.tipo && filters.tipo.toLowerCase() !== 'todos') {
       const map = {
         'venda': 'VENDA',
@@ -87,7 +135,7 @@ export default function ListingPage() {
     if (sort === 'menor') list.sort((a, b) => a.priceNum - b.priceNum)
     if (sort === 'maior') list.sort((a, b) => b.priceNum - a.priceNum)
     return list
-  }, [filters, sort])
+  }, [filters, sort, properties])
 
   const badgeClass = (type) => {
     if (type === 'VENDA') return 'badge badge-venda'
@@ -288,7 +336,7 @@ export default function ListingPage() {
               {/* Sort bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
                 <p className="text-sm text-warm-600">
-                  <span className="font-semibold text-navy-900">{filtered.length}</span> imóveis encontrados
+                  {loading ? 'Carregando...' : <span className="font-semibold text-navy-900">{filtered.length}</span>} {loading ? '' : 'imóveis encontrados'}
                 </p>
                 <div className="flex items-center gap-2">
                   <label htmlFor="sort-select" className="text-xs text-warm-400 font-medium whitespace-nowrap">Ordenar por:</label>
@@ -359,8 +407,8 @@ export default function ListingPage() {
                           <span className="truncate">{p.address} — {p.neighborhood}</span>
                         </p>
                         <div className="flex items-center justify-between text-warm-500 text-xs font-medium mt-4 pt-3 border-t border-warm-100">
-                          <span className="flex items-center gap-1.5"><BedDouble size={14} className="text-warm-400" />{p.beds} qtos</span>
-                          <span className="flex items-center gap-1.5"><Car size={14} className="text-warm-400" />{p.parking} vagas</span>
+                          <span className="flex items-center gap-1.5"><BedDouble size={14} className="text-warm-400" />{p.beds || 0} qtos</span>
+                          <span className="flex items-center gap-1.5"><Car size={14} className="text-warm-400" />{p.parking || 0} vagas</span>
                           <span className="flex items-center gap-1.5"><Maximize2 size={14} className="text-warm-400" />{p.area}m²</span>
                         </div>
                         <Link

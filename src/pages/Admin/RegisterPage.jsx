@@ -25,14 +25,16 @@ export default function RegisterPage() {
       // Validar com Zod
       registerSchema.parse(formData)
       
-      // Criar usuário no Supabase Auth
-      const { data: authData, error: authError } = await signup(
+   // Criar usuário no Supabase Auth
+      const authData = await signup(
         formData.email,
         formData.password,
         { name: formData.name }
       )
-      
-      if (authError) throw authError
+
+      if (!authData?.user) {
+        throw new Error('Não foi possível criar o usuário.')
+}
       
       // Criar registro em admin_users
       const { error: dbError } = await supabase.from('admin_users').insert({

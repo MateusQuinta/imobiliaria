@@ -19,7 +19,7 @@ export function useAuth() {
   return {
     user,
     loading,
-    isAdmin: checkAdminStatus(),
+    isAdmin: checkAdminStatus,
     login,
     signup,
     logout

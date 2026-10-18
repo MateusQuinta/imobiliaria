@@ -15,8 +15,14 @@ CREATE TABLE admin_users (
 -- Expandir tabela properties
 ALTER TABLE properties ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES admin_users(id);
 ALTER TABLE properties ADD COLUMN IF NOT EXISTS updated_by UUID REFERENCES admin_users(id);
-ALTER TABLE properties ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'rascunho' CHECK (status IN ('rascunho', 'ativo', 'inativo', 'vendido'));
+
+-- Remover constraint antigo de status e adicionar novo
+ALTER TABLE properties DROP CONSTRAINT IF EXISTS properties_status_check;
 ALTER TABLE properties ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false;
+
+-- Atualizar status para o novo formato
+ALTER TABLE properties ALTER COLUMN status SET DEFAULT 'rascunho';
+ALTER TABLE properties ADD CONSTRAINT properties_status_check CHECK (status IN ('rascunho', 'ativo', 'inativo', 'vendido'));
 
 -- Adicionar coluna de status aos formulários
 ALTER TABLE contact_forms ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'pendente' CHECK (status IN ('pendente', 'resolvido'));
@@ -30,9 +36,14 @@ CREATE POLICY "Permitir insert público em admin_users" ON admin_users FOR INSER
 CREATE POLICY "Admin pode ver todos os usuários" ON admin_users FOR SELECT USING (auth.role() = 'authenticated');
 CREATE POLICY "Admin pode atualizar usuários" ON admin_users FOR UPDATE USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Todos podem ver propriedades" ON properties FOR SELECT USING (true);
+-- Políticas de propriedades (recriar se já existirem)
+DROP POLICY IF EXISTS "Admin pode inserir propriedades" ON properties;
 CREATE POLICY "Admin pode inserir propriedades" ON properties FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Admin pode atualizar propriedades" ON properties;
 CREATE POLICY "Admin pode atualizar propriedades" ON properties FOR UPDATE USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Admin pode deletar propriedades" ON properties;
 CREATE POLICY "Admin pode deletar propriedades" ON properties FOR DELETE USING (auth.role() = 'authenticated');
 
 CREATE POLICY "Admin pode ver leads" ON contact_forms FOR SELECT USING (auth.role() = 'authenticated');

@@ -40,12 +40,26 @@ export default function PropertyFormPage() {
       }).format(formData.priceNum)
 
       const propertyData = {
-        ...formData,
+        title: formData.title,
+        type: formData.type,
+        price_num: formData.priceNum,
         price_display: priceDisplay,
+        neighborhood: formData.neighborhood,
+        address: formData.address,
+        beds: formData.beds,
+        baths: formData.baths,
+        parking: formData.parking,
+        area: formData.area,
+        status: formData.status,
+        featured: formData.featured,
+        description: formData.description,
         image: images[0] || '',
         created_by: user.id,
         updated_by: user.id
       }
+
+      console.log('Dados do imóvel:', propertyData)
+      console.log('User ID:', user.id)
 
       let error
       if (isEdit) {
@@ -56,13 +70,16 @@ export default function PropertyFormPage() {
         error = result.error
       }
 
-      if (error) throw error
+      if (error) {
+        console.error('Erro do Supabase:', error)
+        throw error
+      }
       
       toast.success(isEdit ? 'Imóvel atualizado!' : 'Imóvel criado!')
       navigate('/admin/properties')
     } catch (error) {
-      toast.error('Erro ao salvar imóvel')
-      console.error(error)
+      toast.error('Erro ao salvar imóvel: ' + error.message)
+      console.error('Erro completo:', error)
     } finally {
       setLoading(false)
     }
