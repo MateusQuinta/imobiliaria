@@ -374,7 +374,7 @@ export default function PropertyDetailPage() {
                     {property.address} — {property.neighborhood}, {property.city}
                   </p>
                   <p className="text-xs text-warm-500 max-w-md leading-relaxed">
-                    Localização privilegiada próxima aos melhores restaurantes, empórios gastronômicos, colégios internacionais e vias expressas de São Paulo.
+                    Localização privilegiada próxima aos melhores centros comerciais, restaurantes, colégios conceituados e vias expressas do Vale do Paraíba.
                   </p>
                 </div>
               </div>
@@ -449,7 +449,7 @@ export default function PropertyDetailPage() {
 
                 {/* Ações Rápidas */}
                 <a
-                  href={`https://wa.me/5511999990000?text=${encodeURIComponent(
+                  href={`https://wa.me/5512999990000?text=${encodeURIComponent(
                     `Olá, tenho interesse no imóvel "${property.title}" (Ref #${property.id}) anunciado no site da Viva Belle Imobiliária.`
                   )}`}
                   target="_blank"
@@ -462,12 +462,38 @@ export default function PropertyDetailPage() {
                 </a>
 
                 <a
-                  href="tel:1130000000"
+                  href="tel:1239000000"
                   className="btn btn-ghost w-full mt-2.5 justify-center flex items-center gap-2 py-3 text-sm font-semibold"
                 >
                   <Phone size={16} />
-                  (11) 3000-0000
+                  (12) 3900-0000
                 </a>
+
+                {/* Card de Conformidade Legal - Corretor Responsável */}
+                <div className="mt-4 p-3.5 bg-warm-50 rounded-xl border border-warm-200 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gold-500/10 text-gold-600 flex items-center justify-center shrink-0">
+                    <ShieldCheck size={20} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-warm-500 block">
+                      Corretor Responsável
+                    </span>
+                    <strong className="text-xs text-navy-900 block truncate">
+                      {property.broker_name || 'Patrícia Oliveira'}
+                    </strong>
+                    <span className="text-[11px] text-gold-600 font-semibold block">
+                      {property.broker_creci || 'CRECI 123.456-F'} &middot; Vale do Paraíba
+                    </span>
+                  </div>
+                  {property.broker_id && (
+                    <Link
+                      to={`/corretor/${property.broker_id}`}
+                      className="text-[11px] font-semibold text-navy-900 hover:text-gold-600 underline shrink-0"
+                    >
+                      Perfil
+                    </Link>
+                  )}
+                </div>
 
                 <div className="border-t border-warm-100 my-6" />
 

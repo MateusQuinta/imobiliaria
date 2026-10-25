@@ -113,7 +113,7 @@ const TYPE_SCALE = [
   { label: 'Heading LG',     size: 28, lh: 1.30, w: 600, family: 'sans',  sample: 'R$ 1.850.000',                      use: 'Preços de destaque, subtítulos' },
   { label: 'Heading MD',     size: 22, lh: 1.38, w: 600, family: 'sans',  sample: 'Simule seu financiamento',          use: 'Heading de formulário, cards' },
   { label: 'Heading SM',     size: 18, lh: 1.45, w: 600, family: 'sans',  sample: 'Atendimento humano, do início ao fim.', use: 'Destaques de seção' },
-  { label: 'Body LG',        size: 18, lh: 1.70, w: 400, family: 'sans',  sample: 'Encontre o imóvel ideal para você e sua família em São Paulo, com transparência e cuidado.', use: 'Texto hero, lead' },
+  { label: 'Body LG',        size: 18, lh: 1.70, w: 400, family: 'sans',  sample: 'Encontre o imóvel ideal para você e sua família no Vale do Paraíba, com transparência e cuidado.', use: 'Texto hero, lead' },
   { label: 'Body MD',        size: 16, lh: 1.65, w: 400, family: 'sans',  sample: 'Com mais de 15 anos de mercado, a Áurea Imóveis conecta famílias paulistanas aos melhores imóveis de médio e alto padrão.', use: 'Parágrafos padrão' },
   { label: 'Body SM',        size: 14, lh: 1.60, w: 400, family: 'sans',  sample: '3 quartos · 2 vagas · 142 m² · Zona Sul',     use: 'Metadados, detalhes de card' },
   { label: 'Label / Overline', size: 11, lh: 1.4, w: 500, family: 'sans', sample: 'LANÇAMENTO EXCLUSIVO', use: 'Badges, overlines, rótulos de campo', ls: '0.13em', upper: true },
@@ -525,10 +525,10 @@ export default function StyleGuide() {
               <p className="text-xs font-semibold tracking-widest text-gold-500 uppercase mb-4">Corpo — Inter</p>
               <p className="font-sans text-2xl font-semibold text-navy-900 mb-2">R$ 1.850.000</p>
               <p className="font-sans text-base font-normal text-warm-700 leading-relaxed mb-2">
-                Conectamos famílias paulistanas aos melhores imóveis de médio e alto padrão, com atendimento humano.
+                Conectamos famílias do Vale do Paraíba aos melhores imóveis de médio e alto padrão, com atendimento humano.
               </p>
               <p className="font-sans text-sm font-normal text-warm-400 mb-4">
-                3 quartos · 2 vagas · 142 m² · Jardins, São Paulo
+                3 quartos · 2 vagas · 142 m² · Jardim Aquarius, São José dos Campos
               </p>
               <p className="text-xs font-mono text-warm-400">
                 @import: Google Fonts — Inter<br/>

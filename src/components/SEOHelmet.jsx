@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 
 const DEFAULT_META = {
-  title: 'Viva Belle Imobiliária — Seu novo capítulo começa aqui | São Paulo',
-  description: 'A Viva Belle Imobiliária conecta você aos melhores imóveis de médio e alto padrão em São Paulo. Compra, venda e locação com atendimento humano, transparente e exclusivo.',
-  keywords: 'imobiliária, São Paulo, imóveis alto padrão, comprar imóvel, alugar imóvel, lançamentos, Jardins, Itaim Bibi, Pinheiros',
+  title: 'Viva Belle Imobiliária — Seu novo capítulo começa aqui | Vale do Paraíba',
+  description: 'A Viva Belle Imobiliária conecta você aos melhores imóveis de médio e alto padrão no Vale do Paraíba: São José dos Campos, Taubaté, Jacareí. Compra, venda e locação com atendimento humano, transparente e exclusivo.',
+  keywords: 'imobiliária, Vale do Paraíba, São José dos Campos, Taubaté, Jacareí, Jardim Aquarius, Urbanova, Vila Ema, Colinas, imóveis alto padrão, comprar imóvel, alugar imóvel, lançamentos',
   ogImage: '/og-image.jpg',
 }
 

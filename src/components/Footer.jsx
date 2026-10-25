@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { LogoWordmark } from './Logo'
-import { MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { MapPin, Phone, Mail, Clock, Briefcase } from 'lucide-react'
 
 const InstagramIcon = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -36,23 +36,25 @@ const SOCIAL_ICONS = [InstagramIcon, FacebookIcon, LinkedinIcon, YoutubeIcon]
 const LINKS = {
   comprar: [
     { label: 'Apartamentos', to: '/imoveis?categoria=apartamento&tipo=venda' },
-    { label: 'Casas', to: '/imoveis?categoria=casa&tipo=venda' },
+    { label: 'Casas em Condomínio', to: '/imoveis?categoria=casa&tipo=venda' },
     { label: 'Coberturas', to: '/imoveis?categoria=cobertura&tipo=venda' },
-    { label: 'Lançamentos', to: '/imoveis?tipo=lancamento' },
-    { label: 'Bairros em SP', to: '/imoveis' },
+    { label: 'Lançamentos no Vale', to: '/imoveis?tipo=lancamento' },
+    { label: 'Jardim Aquarius & Colinas', to: '/imoveis?bairro=Jardim+Aquarius+(SJC)' },
+    { label: 'Urbanova & Zona Oeste', to: '/imoveis?bairro=Urbanova+(SJC)' },
   ],
   alugar: [
     { label: 'Apartamentos', to: '/imoveis?categoria=apartamento&tipo=aluguel' },
     { label: 'Casas', to: '/imoveis?categoria=casa&tipo=aluguel' },
-    { label: 'Studios', to: '/imoveis?categoria=studio&tipo=aluguel' },
-    { label: 'Por bairro', to: '/imoveis?tipo=aluguel' },
+    { label: 'Salas Comerciais', to: '/imoveis?categoria=comercial&tipo=aluguel' },
+    { label: 'Todos para Locação', to: '/imoveis?tipo=aluguel' },
   ],
   empresa: [
     { label: 'Sobre nós', to: '/sobre' },
     { label: 'Nossa equipe', to: '/sobre#equipe' },
-    { label: 'Blog', to: '/blog' },
-    { label: 'Trabalhe conosco', to: '/contato' },
-    { label: 'Avalie-nos', to: '/contato' },
+    { label: 'Seja um Corretor Parceiro', to: '/seja-um-corretor' },
+    { label: 'Área do Corretor / Admin', to: '/admin/login' },
+    { label: 'Anunciar meu imóvel', to: '/vender' },
+    { label: 'Fale Conosco', to: '/contato' },
   ],
 }
 
@@ -64,8 +66,8 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:col-span-2">
             <LogoWordmark size="sm" dark />
-            <p className="text-white/50 text-sm leading-relaxed mt-4 max-w-xs">
-              Conectamos famílias paulistanas aos melhores imóveis de médio e alto padrão, com atendimento humano e total transparência.
+            <p className="text-white/60 text-sm leading-relaxed mt-4 max-w-sm">
+              Conectamos famílias do Vale do Paraíba aos melhores imóveis de médio e alto padrão em São José dos Campos, Taubaté, Jacareí e região. Atendimento humano, exclusivo e com total rigor jurídico.
             </p>
             <div className="flex gap-3 mt-6">
               {SOCIAL_ICONS.map((Icon, i) => (
@@ -75,17 +77,17 @@ export default function Footer() {
               ))}
             </div>
             <div className="mt-6 pt-6 border-t border-white/8 flex flex-col gap-2">
-              <span className="flex items-center gap-2 text-xs text-white/40">
-                <MapPin size={12} /> Rua Oscar Freire, 820 - cj 41, Jardins, São Paulo - SP
+              <span className="flex items-center gap-2 text-xs text-white/60">
+                <MapPin size={14} className="text-gold-400 shrink-0" /> Av. Cassiano Ricardo, 1410 - Sala 804, Ed. Hyde Park, Jardim Aquarius, São José dos Campos - SP
               </span>
-              <span className="flex items-center gap-2 text-xs text-white/40">
-                <Phone size={12} /> (11) 3000-0000
+              <span className="flex items-center gap-2 text-xs text-white/60">
+                <Phone size={14} className="text-gold-400 shrink-0" /> (12) 3900-0000 &middot; WhatsApp: (12) 99999-0000
               </span>
-              <span className="flex items-center gap-2 text-xs text-white/40">
-                <Mail size={12} /> contato@vivabelle.com.br
+              <span className="flex items-center gap-2 text-xs text-white/60">
+                <Mail size={14} className="text-gold-400 shrink-0" /> contato@vivabelle.com.br
               </span>
-              <span className="flex items-center gap-2 text-xs text-white/40">
-                <Clock size={12} /> Seg–Sex 9h–19h &middot; Sáb 9h–14h
+              <span className="flex items-center gap-2 text-xs text-white/60">
+                <Clock size={14} className="text-gold-400 shrink-0" /> Seg–Sex 9h–19h &middot; Sáb 9h–14h
               </span>
             </div>
           </div>
@@ -93,10 +95,10 @@ export default function Footer() {
           {/* Comprar */}
           <div>
             <h4 className="text-xs font-semibold tracking-widest uppercase text-gold-400 mb-5">Comprar</h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2.5">
               {LINKS.comprar.map(l => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-sm text-white/50 hover:text-gold-300 transition-colors">{l.label}</Link>
+                  <Link to={l.to} className="text-sm text-white/60 hover:text-gold-300 transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -105,10 +107,10 @@ export default function Footer() {
           {/* Alugar */}
           <div>
             <h4 className="text-xs font-semibold tracking-widest uppercase text-gold-400 mb-5">Alugar</h4>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2.5">
               {LINKS.alugar.map(l => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-sm text-white/50 hover:text-gold-300 transition-colors">{l.label}</Link>
+                  <Link to={l.to} className="text-sm text-white/60 hover:text-gold-300 transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -116,11 +118,11 @@ export default function Footer() {
 
           {/* Empresa */}
           <div>
-            <h4 className="text-xs font-semibold tracking-widest uppercase text-gold-400 mb-5">Empresa</h4>
-            <ul className="flex flex-col gap-2">
+            <h4 className="text-xs font-semibold tracking-widest uppercase text-gold-400 mb-5">Empresa & Corretores</h4>
+            <ul className="flex flex-col gap-2.5">
               {LINKS.empresa.map(l => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-sm text-white/50 hover:text-gold-300 transition-colors">{l.label}</Link>
+                  <Link to={l.to} className="text-sm text-white/60 hover:text-gold-300 transition-colors">{l.label}</Link>
                 </li>
               ))}
             </ul>
@@ -128,11 +130,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-white/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
-          <span>© 2026 Viva Belle Imobiliária Ltda. &middot; CNPJ 12.345.678/0001-90 &middot; CRECI-SP 12345-J</span>
+        <div className="mt-12 pt-6 border-t border-white/8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40">
+          <span>© 2026 Viva Belle Imobiliária Ltda. &middot; CNPJ 12.345.678/0001-90 &middot; CRECI-SP 12345-J &middot; Vale do Paraíba / SP</span>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-white/60 transition">Política de Privacidade</a>
-            <a href="#" className="hover:text-white/60 transition">Termos de Uso</a>
+            <Link to="/seja-um-corretor" className="hover:text-gold-300 transition">Seja um Corretor</Link>
+            <Link to="/admin/login" className="hover:text-gold-300 transition">Área do Corretor</Link>
+            <a href="#" className="hover:text-white/70 transition">Política de Privacidade (LGPD)</a>
+            <a href="#" className="hover:text-white/70 transition">Termos de Uso</a>
           </div>
         </div>
       </div>

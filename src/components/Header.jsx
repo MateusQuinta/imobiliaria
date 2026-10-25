@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { LogoWordmark } from './Logo'
-import { Menu, X, Heart, MessageCircle } from 'lucide-react'
+import { Menu, X, Heart, MessageCircle, User } from 'lucide-react'
 import { useFavorites } from '../hooks/useFavorites'
 
 const NAV_LINKS = [
@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: 'Vender', to: '/vender' },
   { label: 'Sobre', to: '/sobre' },
   { label: 'Contato', to: '/contato' },
+  { label: 'Seja Corretor', to: '/seja-um-corretor' },
 ]
 
 export default function Header() {
@@ -48,7 +49,7 @@ export default function Header() {
             <Link
               key={link.to}
               to={link.to}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
                 transparent
                   ? 'text-white/85 hover:text-white hover:bg-white/10'
                   : 'text-warm-600 hover:text-navy-900 hover:bg-warm-50'
@@ -60,9 +61,10 @@ export default function Header() {
         </nav>
 
         {/* Right actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Favoritos */}
-          <button
+          <Link
+            to="/imoveis"
             className={`relative p-2 rounded-lg transition-colors ${
               transparent ? 'text-white/85 hover:bg-white/10' : 'text-warm-600 hover:bg-warm-50'
             }`}
@@ -74,14 +76,28 @@ export default function Header() {
                 {favoriteCount}
               </span>
             )}
-          </button>
+          </Link>
+
+          {/* Área do Corretor */}
+          <Link
+            to="/admin/login"
+            className={`p-2 rounded-lg transition-colors flex items-center gap-1.5 text-xs font-semibold ${
+              transparent 
+                ? 'text-white/90 hover:text-white hover:bg-white/10' 
+                : 'text-navy-800 hover:bg-warm-100'
+            }`}
+            title="Acesso Corretor & Administrador"
+          >
+            <User size={18} />
+            <span className="hidden md:inline">Entrar</span>
+          </Link>
 
           {/* WhatsApp */}
           <a
-            href="https://wa.me/5511999990000"
+            href="https://wa.me/5512999990000?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20os%20im%C3%B3veis%20no%20Vale%20do%20Para%C3%ADba"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-200"
+            className="hidden sm:inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-200 shadow-sm"
           >
             <MessageCircle size={16} />
             WhatsApp
@@ -114,8 +130,15 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              className="px-4 py-3 rounded-lg text-sm font-semibold text-navy-900 bg-warm-100 hover:bg-warm-200 flex items-center gap-2"
+              onClick={() => setMobileOpen(false)}
+            >
+              <User size={16} /> Área do Corretor / Admin
+            </Link>
             <a
-              href="https://wa.me/5511999990000"
+              href="https://wa.me/5512999990000?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20os%20im%C3%B3veis%20no%20Vale%20do%20Para%C3%ADba"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 btn btn-primary justify-center"

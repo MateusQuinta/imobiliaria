@@ -21,7 +21,7 @@ export default function HeroSection() {
       {/* Background photo */}
       <img
         src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1800&q=80"
-        alt="Imóvel de alto padrão em São Paulo"
+        alt="Imóvel de alto padrão no Vale do Paraíba"
         className="absolute inset-0 w-full h-full object-cover"
         loading="eager"
       />
@@ -31,13 +31,13 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-6" style={{paddingBottom: '160px'}}>
         <p className="text-xs font-semibold tracking-[0.25em] uppercase text-gold-300 mb-4">
-          São Paulo · Médio e Alto Padrão
+          Vale do Paraíba · Médio e Alto Padrão
         </p>
         <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] max-w-3xl" style={{textWrap: 'balance'}}>
           Seu novo capítulo<br />começa aqui.
         </h1>
         <p className="text-lg md:text-xl font-light text-white/70 mt-6 max-w-xl leading-relaxed">
-          Mais de 2.800 imóveis de médio e alto padrão em São Paulo. Com atendimento humano do início ao fim.
+          Mais de 1.400 imóveis de médio e alto padrão no Vale do Paraíba. Com atendimento humano do início ao fim.
         </p>
       </div>
 

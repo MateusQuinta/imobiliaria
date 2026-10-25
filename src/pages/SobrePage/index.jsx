@@ -29,15 +29,15 @@ export default function SobrePage() {
     {
       icon: Star,
       title: 'Curadoria Rigorosa',
-      desc: 'Selecionamos apenas imóveis com alto potencial e padrão construtivo comprovado nos melhores bairros de São Paulo. Menos de 15% dos imóveis avaliados entram em nosso portfólio.',
+      desc: 'Selecionamos apenas imóveis com alto potencial e padrão construtivo comprovado nas melhores localizações do Vale do Paraíba. Menos de 15% dos imóveis avaliados entram em nosso portfólio.',
     },
   ]
 
   const stats = [
-    { num: '15+', label: 'Anos de Mercado' },
-    { num: '2.800+', label: 'Imóveis Negociados' },
-    { num: '4.200+', label: 'Clientes Atendidos' },
-    { num: '98%', label: 'Satisfação dos Clientes' },
+    { num: '12+', label: 'Anos no Vale' },
+    { num: '1.450+', label: 'Imóveis Negociados' },
+    { num: '3.200+', label: 'Clientes Atendidos' },
+    { num: '99.4%', label: 'Satisfação dos Clientes' },
   ]
 
   return (
@@ -54,7 +54,7 @@ export default function SobrePage() {
             Quem somos
           </h1>
           <p className="text-white/70 max-w-2xl mt-4 text-lg leading-relaxed font-light">
-            A Viva Belle Imobiliária nasceu para transformar a experiência imobiliária de alto padrão em São Paulo, aliando consultoria técnica rigorosa a um atendimento caloroso, próximo e descomplicado.
+            A Viva Belle Imobiliária nasceu para transformar a experiência imobiliária de médio e alto padrão no Vale do Paraíba, aliando consultoria técnica rigorosa a um atendimento caloroso, próximo e descomplicado.
           </p>
         </div>
       </section>
@@ -64,17 +64,17 @@ export default function SobrePage() {
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-warm-400 mb-2">
-              Desde 2011 em São Paulo
+              Desde 2014 no Vale do Paraíba
             </p>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-navy-900 mb-6 leading-snug">
               Nossa história: construindo laços que atravessam gerações
             </h2>
             <div className="space-y-4 text-warm-600 leading-relaxed text-base">
               <p>
-                Fundada em 2011 no coração dos Jardins, a Viva Belle Imobiliária começou com uma missão clara: criar uma imobiliária boutique onde a curadoria de imóveis excepcionais caminhasse lado a lado com a mais absoluta ética comercial e atenção meticulosa aos detalhes.
+                Fundada no polo tecnológico e econômico de São José dos Campos, a Viva Belle Imobiliária começou com uma missão clara: criar uma imobiliária de referência regional onde a curadoria de imóveis excepcionais caminhasse lado a lado com a mais absoluta ética comercial e atenção meticulosa aos detalhes.
               </p>
               <p>
-                Ao longo dos anos, expandimos nossa atuação com consistência pelos bairros mais nobres da capital paulista — incluindo Itaim Bibi, Pinheiros, Moema, Vila Madalena e Brooklin. Cada nova praça foi aberta com corretores especializados que realmente vivem e respiram a dinâmica desses bairros.
+                Ao longo dos anos, expandimos nossa atuação com consistência pelos bairros e cidades mais valorizados do Vale do Paraíba — incluindo Jardim Aquarius, Urbanova, Jardim das Colinas, Vila Ema, além de Taubaté, Jacareí e a charmosa região da Serra da Mantiqueira. Cada praça conta com corretores especializados que conhecem a fundo as vocações de cada bairro.
               </p>
               <p>
                 Hoje, somos reconhecidos por investidores, famílias e incorporadoras de prestígio como uma referência de liquidez, discrição e segurança jurídica. Nosso compromisso segue o mesmo do primeiro dia: colocar as aspirações de quem nos procura no centro de todas as decisões.
@@ -251,15 +251,15 @@ export default function SobrePage() {
               <div className="flex items-start gap-3 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
                 <MapPin size={20} className="text-gold-500 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-navy-900">Jardins — São Paulo / SP</p>
-                  <p className="text-warm-500 text-xs mt-0.5">Rua Oscar Freire, 820 - Conjunto 41, CEP 01426-001</p>
+                  <p className="font-semibold text-navy-900">Jd. Aquarius — São José dos Campos / SP</p>
+                  <p className="text-warm-500 text-xs mt-0.5">Av. Cassiano Ricardo, 1410 - Sala 804, Ed. Hyde Park, CEP 12246-870</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
                 <Phone size={20} className="text-gold-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-navy-900">Central Telefônica & WhatsApp</p>
-                  <p className="text-warm-500 text-xs mt-0.5">(11) 3000-0000 | (11) 99999-0000</p>
+                  <p className="text-warm-500 text-xs mt-0.5">(12) 3900-0000 | (12) 99999-0000</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
@@ -283,12 +283,12 @@ export default function SobrePage() {
             <div className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gold-600 mb-3 shadow-md">
               <MapPin size={32} />
             </div>
-            <p className="font-serif font-bold text-navy-900 text-lg">Rua Oscar Freire, 820</p>
+            <p className="font-serif font-bold text-navy-900 text-lg">Av. Cassiano Ricardo, 1410</p>
             <p className="text-xs text-warm-600 mt-1 max-w-xs">
-              Esquina com Alameda Bela Cintra. Estacionamento com manobrista no local.
+              Edifício Hyde Park no coração do Aquarius. Valet e estacionamento rotativo no local.
             </p>
             <a
-              href="https://maps.google.com/?q=Rua+Oscar+Freire+820+Jardins+Sao+Paulo"
+              href="https://maps.google.com/?q=Av.+Cassiano+Ricardo+1410+Sao+Jose+dos+Campos"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary bg-navy-900 text-xs py-2 px-4 mt-4"

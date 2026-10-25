@@ -284,7 +284,7 @@ export default function ListingPage() {
 
   return (
     <>
-      <SEOHelmet title="Imóveis em São Paulo" description="Busque imóveis de médio e alto padrão em São Paulo. Apartamentos, casas, coberturas e lançamentos nos melhores bairros." path="/imoveis" />
+      <SEOHelmet title="Imóveis no Vale do Paraíba" description="Busque imóveis de médio e alto padrão no Vale do Paraíba: São José dos Campos, Taubaté, Jacareí. Apartamentos, casas, coberturas e lançamentos nos melhores bairros." path="/imoveis" />
       <Header />
       {/* Page hero */}
       <div className="bg-navy-900 pt-28 pb-12 px-6">
@@ -294,8 +294,8 @@ export default function ListingPage() {
             <span className="mx-2 text-white/30">/</span>
             Imóveis
           </p>
-          <h1 className="font-serif text-4xl md:text-5xl font-bold text-white tracking-tight">Imóveis em São Paulo</h1>
-          <p className="text-white/60 mt-2 text-base">Encontre o imóvel ideal com a curadoria exclusiva da Viva Belle</p>
+          <h1 className="font-serif text-4xl md:text-5xl font-bold text-white tracking-tight">Imóveis no Vale do Paraíba</h1>
+          <p className="text-white/60 mt-2 text-base">Encontre o imóvel ideal com a curadoria exclusiva da Viva Belle em São José dos Campos e região</p>
         </div>
       </div>
 

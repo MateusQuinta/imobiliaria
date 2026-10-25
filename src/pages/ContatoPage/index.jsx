@@ -49,7 +49,7 @@ export default function ContatoPage() {
 
   return (
     <>
-      <SEOHelmet title="Fale Conosco" description="Entre em contato com a Viva Belle Imobiliária. Visite nosso escritório nos Jardins, ligue ou envie mensagem pelo WhatsApp. Atendimento humano e transparente." path="/contato" />
+      <SEOHelmet title="Fale Conosco" description="Entre em contato com a Viva Belle Imobiliária. Visite nosso escritório no Jardim Aquarius em São José dos Campos, ligue ou envie mensagem pelo WhatsApp. Atendimento humano e transparente." path="/contato" />
       <Header />
 
       {/* Hero */}
@@ -83,10 +83,10 @@ export default function ContatoPage() {
                   <MapPin size={22} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-navy-900 text-sm">Nosso Escritório</h3>
+                  <h3 className="font-semibold text-navy-900 text-sm">Nosso Escritório Regional</h3>
                   <p className="text-warm-600 text-sm mt-1 leading-relaxed">
-                    Rua Oscar Freire, 820 - cj 41, Jardins<br />
-                    São Paulo - SP, CEP 01426-001
+                    Av. Cassiano Ricardo, 1410 - Sala 804, Ed. Hyde Park<br />
+                    Jardim Aquarius, São José dos Campos - SP, CEP 12246-870
                   </p>
                 </div>
               </div>
@@ -99,8 +99,8 @@ export default function ContatoPage() {
                 <div>
                   <h3 className="font-semibold text-navy-900 text-sm">Telefone Fixo</h3>
                   <p className="text-warm-600 text-sm mt-1">
-                    <a href="tel:1130000000" className="hover:text-navy-900 font-medium">
-                      (11) 3000-0000
+                    <a href="tel:1239000000" className="hover:text-navy-900 font-medium">
+                      (12) 3900-0000
                     </a>
                   </p>
                   <p className="text-xs text-warm-400 mt-0.5">Seg–Sex 9h–19h, Sáb 9h–14h</p>
@@ -116,12 +116,12 @@ export default function ContatoPage() {
                   <h3 className="font-semibold text-navy-900 text-sm">WhatsApp Oficial</h3>
                   <p className="text-warm-600 text-sm mt-1">
                     <a
-                      href="https://wa.me/5511999990000"
+                      href="https://wa.me/5512999990000"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-emerald-700 hover:text-emerald-800 font-semibold"
                     >
-                      (11) 99999-0000
+                      (12) 99999-0000
                     </a>
                   </p>
                   <p className="text-xs text-warm-400 mt-0.5">Atendimento rápido com consultores de plantão</p>
@@ -148,12 +148,12 @@ export default function ContatoPage() {
             {/* Mapa Placeholder */}
             <div className="bg-warm-200 rounded-2xl h-60 mt-6 flex flex-col items-center justify-center text-warm-600 gap-2 border border-warm-300 p-6 text-center relative overflow-hidden">
               <MapPin size={36} className="text-gold-600" />
-              <p className="font-serif font-bold text-navy-900 text-base">Jardins — São Paulo / SP</p>
+              <p className="font-serif font-bold text-navy-900 text-base">Jd. Aquarius — São José dos Campos / SP</p>
               <p className="text-xs text-warm-500 max-w-xs">
-                Rua Oscar Freire, 820 · Valet com manobrista na entrada do edifício
+                Av. Cassiano Ricardo, 1410 · Valet e estacionamento para visitantes no local
               </p>
               <a
-                href="https://maps.google.com/?q=Rua+Oscar+Freire+820+Jardins+Sao+Paulo"
+                href="https://maps.google.com/?q=Av.+Cassiano+Ricardo+1410+Sao+Jose+dos+Campos"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 text-xs font-semibold text-navy-900 bg-white/90 backdrop-blur-sm px-3.5 py-1.5 rounded-lg border border-warm-300 hover:bg-white transition"
