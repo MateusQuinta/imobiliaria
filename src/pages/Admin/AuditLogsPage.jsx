@@ -175,44 +175,44 @@ export default function AuditLogsPage() {
           Gere planilhas atualizadas para auditorias financeiras, relatórios mensais e análises de desempenho:
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
             onClick={handleExportProperties}
-            className="btn btn-secondary justify-center gap-2 text-xs py-3.5 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
+            className="btn btn-secondary justify-center gap-2 text-xs py-3 px-4 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
           >
-            <Download size={16} className="text-gold-600" />
-            Exportar Imóveis (CSV)
+            <Download size={16} className="text-gold-600 shrink-0" />
+            <span className="text-left">Exportar Imóveis (CSV)</span>
           </button>
 
           <button
             onClick={handleExportLeads}
-            className="btn btn-secondary justify-center gap-2 text-xs py-3.5 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
+            className="btn btn-secondary justify-center gap-2 text-xs py-3 px-4 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
           >
-            <Download size={16} className="text-gold-600" />
-            Exportar Leads / CRM (CSV)
+            <Download size={16} className="text-gold-600 shrink-0" />
+            <span className="text-left">Exportar Leads / CRM (CSV)</span>
           </button>
 
           <button
             onClick={handleExportBrokers}
-            className="btn btn-secondary justify-center gap-2 text-xs py-3.5 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
+            className="btn btn-secondary justify-center gap-2 text-xs py-3 px-4 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
           >
-            <Download size={16} className="text-gold-600" />
-            Exportar Corretores (CSV)
+            <Download size={16} className="text-gold-600 shrink-0" />
+            <span className="text-left">Exportar Corretores (CSV)</span>
           </button>
 
           <button
             onClick={handleExportAuditLogs}
-            className="btn btn-secondary justify-center gap-2 text-xs py-3.5 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
+            className="btn btn-secondary justify-center gap-2 text-xs py-3 px-4 border-warm-300 hover:border-gold-500 hover:bg-gold-50 transition"
           >
-            <Download size={16} className="text-gold-600" />
-            Exportar Auditoria (CSV)
+            <Download size={16} className="text-gold-600 shrink-0" />
+            <span className="text-left">Exportar Auditoria (CSV)</span>
           </button>
         </div>
       </div>
 
       {/* Tabela de Logs de Auditoria */}
       <div className="bg-white rounded-2xl shadow-sm border border-warm-200 overflow-hidden">
-        <div className="p-6 border-b border-warm-200 flex justify-between items-center">
+        <div className="p-6 border-b border-warm-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
           <h2 className="font-serif text-lg font-bold text-navy-900">Rastreabilidade de Ações Recentes</h2>
           <span className="text-xs text-warm-400">Últimos eventos registrados</span>
         </div>
@@ -223,13 +223,13 @@ export default function AuditLogsPage() {
           <div className="p-16 text-center text-warm-500">Nenhum evento registrado ainda.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-warm-50 text-[11px] font-bold uppercase tracking-wider text-warm-500 border-b border-warm-200">
-                  <th className="p-4">Data e Hora</th>
-                  <th className="p-4">Usuário Responsável</th>
-                  <th className="p-4">Ação Executada</th>
-                  <th className="p-4">Alvo / Entidade</th>
+                  <th className="p-4 whitespace-nowrap">Data e Hora</th>
+                  <th className="p-4 whitespace-nowrap">Usuário Responsável</th>
+                  <th className="p-4 whitespace-nowrap">Ação Executada</th>
+                  <th className="p-4 whitespace-nowrap">Alvo / Entidade</th>
                   <th className="p-4">Detalhes</th>
                 </tr>
               </thead>
@@ -240,24 +240,24 @@ export default function AuditLogsPage() {
                       {new Date(log.created_at).toLocaleDateString('pt-BR')} às {new Date(log.created_at).toLocaleTimeString('pt-BR')}
                     </td>
 
-                    <td className="p-4 font-semibold text-navy-900">
+                    <td className="p-4 font-semibold text-navy-900 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <span>{log.user_name || 'Sistema'}</span>
-                        <span className="text-[10px] text-warm-400 uppercase">({log.user_role || 'user'})</span>
+                        <span className="text-[10px] text-warm-400 uppercase bg-warm-100 px-1.5 py-0.5 rounded">({log.user_role || 'user'})</span>
                       </div>
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 whitespace-nowrap">
                       <span className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-navy-50 text-navy-800 border border-navy-100">
                         {log.action}
                       </span>
                     </td>
 
-                    <td className="p-4 text-warm-600 font-medium">
+                    <td className="p-4 text-warm-600 font-medium whitespace-nowrap">
                       {log.target_type} {log.target_id ? `(#${log.target_id.substring(0, 8)})` : ''}
                     </td>
 
-                    <td className="p-4 text-warm-500 max-w-xs truncate font-mono text-[11px]">
+                    <td className="p-4 text-warm-500 font-mono text-[11px] break-all">
                       {log.details ? JSON.stringify(log.details) : '-'}
                     </td>
                   </tr>
