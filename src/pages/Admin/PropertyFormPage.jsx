@@ -103,7 +103,10 @@ export default function PropertyFormPage() {
     category: 'Apartamento',
     city: 'São José dos Campos',
     neighborhood: 'Jardim Aquarius',
+    cep: '',
     address: '',
+    number: '',
+    complement: '',
     priceNum: '',
     condoFee: '',
     iptu: '',
@@ -145,7 +148,10 @@ export default function PropertyFormPage() {
               category: data.category || 'Apartamento',
               city: data.city || 'São José dos Campos',
               neighborhood: data.neighborhood || 'Jardim Aquarius',
+              cep: data.cep || '',
               address: data.address || '',
+              number: data.number || '',
+              complement: data.complement || '',
               priceNum: data.price_num ? data.price_num.toString() : '',
               condoFee: data.condo_fee ? data.condo_fee.toString() : '',
               iptu: data.iptu ? data.iptu.toString() : '',
@@ -218,7 +224,10 @@ export default function PropertyFormPage() {
         price_display: priceDisplay,
         city: formData.city,
         neighborhood: formData.neighborhood,
+        cep: formData.cep,
         address: formData.address,
+        number: formData.number,
+        complement: formData.complement,
         beds: Number(formData.beds) || 0,
         suites: Number(formData.suites) || 0,
         baths: Number(formData.baths) || 0,
@@ -429,16 +438,59 @@ export default function PropertyFormPage() {
 
             <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-navy-900 uppercase tracking-wider mb-1.5">
-                Endereço Completo (Rua, Número e Complemento) *
+                Endereço (Rua) *
               </label>
               <input
                 type="text"
                 required
                 value={formData.address}
                 onChange={e => setFormData({ ...formData, address: e.target.value })}
-                placeholder="Ex: Av. Cassiano Ricardo, 1400 - Edifício Hyde Park, Apto 84"
+                placeholder="Ex: Av. Cassiano Ricardo"
                 className="input-field"
               />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-navy-900 uppercase tracking-wider mb-1.5">
+                  CEP *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.cep}
+                  onChange={e => setFormData({ ...formData, cep: e.target.value })}
+                  placeholder="Ex: 12245-000"
+                  className="input-field"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-navy-900 uppercase tracking-wider mb-1.5">
+                  Número *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.number}
+                  onChange={e => setFormData({ ...formData, number: e.target.value })}
+                  placeholder="Ex: 1400"
+                  className="input-field"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-navy-900 uppercase tracking-wider mb-1.5">
+                  Complemento
+                </label>
+                <input
+                  type="text"
+                  value={formData.complement}
+                  onChange={e => setFormData({ ...formData, complement: e.target.value })}
+                  placeholder="Ex: Apto 84"
+                  className="input-field"
+                />
+              </div>
             </div>
           </div>
         </div>
