@@ -10,8 +10,7 @@ import PropertyDetailPage from './pages/PropertyDetailPage'
 import SobrePage from './pages/SobrePage'
 import ContatoPage from './pages/ContatoPage'
 import StyleGuide from './pages/StyleGuide'
-import SejaUmCorretorPage from './pages/SejaUmCorretorPage'
-import BrokerPublicProfilePage from './pages/BrokerPublicProfilePage'
+import SejaUmCorretorPage from './pages/SejaUmCorretorPage/index'
 
 // Autenticação e Status
 import LoginPage from './pages/Admin/LoginPage'
@@ -51,7 +50,6 @@ export default function App() {
             <Route path="/contato" element={<ContatoPage />} />
             <Route path="/vender" element={<ContatoPage />} />
             <Route path="/seja-um-corretor" element={<SejaUmCorretorPage />} />
-            <Route path="/corretor/:id" element={<BrokerPublicProfilePage />} />
             <Route path="/style-guide" element={<StyleGuide />} />
             
             {/* Rotas de Autenticação & Status */}

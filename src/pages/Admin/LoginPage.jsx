@@ -9,22 +9,31 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
+  const { login, profile } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     try {
       const data = await login(email, password)
       toast.success('Login realizado com sucesso')
 
-      // Verificar status do usuário
-      // Se tiver perfil pendente, vai para análise; se suspenso, para conta suspensa
-      setTimeout(() => {
-        navigate('/admin/dashboard')
-      }, 100)
+      // Aguardar profile carregar e verificar status
+      setTimeout(async () => {
+        // Verificar status do profile atualizado
+        if (profile?.status === 'pending') {
+          navigate('/cadastro-em-analise')
+        } else if (profile?.status === 'suspended' || profile?.status === 'rejected') {
+          navigate('/conta-suspensa')
+        } else if (profile?.status === 'active' || profile?.status === 'approved') {
+          navigate('/admin/dashboard')
+        } else {
+          // Se não tem profile ou status indefinido, vai para dashboard
+          navigate('/admin/dashboard')
+        }
+      }, 500)
     } catch (error) {
       console.error(error)
       toast.error('E-mail ou senha inválidos')
@@ -98,9 +107,10 @@ export default function LoginPage() {
           </p>
           <Link
             to="/seja-um-corretor"
-            className="btn btn-secondary w-full justify-center text-xs py-2.5 font-semibold text-navy-900 border-warm-300 hover:bg-warm-100"
+            className="btn btn-primary w-full justify-center text-xs py-2.5 font-semibold shadow-md"
           >
             Seja um Corretor Parceiro
+            <ArrowRight size={14} />
           </Link>
         </div>
       </div>
