@@ -266,7 +266,10 @@ export default function PropertyFormPage() {
       }
 
       if (error) {
-        console.error('Database error (fallback applied if schema partial):', error)
+        console.error('Database error:', error)
+        toast.error(`Erro ao salvar: ${error.message}`)
+        setLoading(false)
+        return
       }
 
       await logAuditEvent({
