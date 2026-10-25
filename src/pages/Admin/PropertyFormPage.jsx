@@ -78,6 +78,19 @@ const AMENITIES_LIST = [
   { id: 'elevator', label: 'Elevador Privativo' }
 ]
 
+// Função para formatar número com pontos
+function formatNumberWithDots(value) {
+  if (!value) return ''
+  const numericValue = value.replace(/\D/g, '')
+  return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+}
+
+// Função para remover pontos e converter para número
+function parseFormattedNumber(value) {
+  if (!value) return 0
+  return Number(value.replace(/\./g, '')) || 0
+}
+
 export default function PropertyFormPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -133,9 +146,9 @@ export default function PropertyFormPage() {
               city: data.city || 'São José dos Campos',
               neighborhood: data.neighborhood || 'Jardim Aquarius',
               address: data.address || '',
-              priceNum: data.price_num || '',
-              condoFee: data.condo_fee || '',
-              iptu: data.iptu || '',
+              priceNum: data.price_num ? data.price_num.toString() : '',
+              condoFee: data.condo_fee ? data.condo_fee.toString() : '',
+              iptu: data.iptu ? data.iptu.toString() : '',
               beds: data.beds ?? 3,
               suites: data.suites ?? 1,
               baths: data.baths ?? 2,
@@ -182,7 +195,7 @@ export default function PropertyFormPage() {
     setLoading(true)
 
     try {
-      const priceVal = Number(formData.priceNum) || 0
+      const priceVal = parseFormattedNumber(formData.priceNum)
       const priceDisplay = formData.type === 'ALUGUEL'
         ? `R$ ${priceVal.toLocaleString('pt-BR')}/mês`
         : `R$ ${priceVal.toLocaleString('pt-BR')}`
@@ -211,8 +224,8 @@ export default function PropertyFormPage() {
         baths: Number(formData.baths) || 0,
         parking: Number(formData.parking) || 0,
         area: Number(formData.area) || 0,
-        condo_fee: Number(formData.condoFee) || 0,
-        iptu: Number(formData.iptu) || 0,
+        condo_fee: parseFormattedNumber(formData.condoFee),
+        iptu: parseFormattedNumber(formData.iptu),
         status: finalStatus,
         moderation_status: moderationStatus,
         featured: formData.featured,
@@ -337,12 +350,12 @@ export default function PropertyFormPage() {
                 Valor do Imóvel (R$) *
               </label>
               <input
-                type="number"
+                type="text"
                 required
                 min="0"
-                value={formData.priceNum}
+                value={formatNumberWithDots(formData.priceNum)}
                 onChange={e => setFormData({ ...formData, priceNum: e.target.value })}
-                placeholder="Ex: 1850000"
+                placeholder="Ex: 1.850.000"
                 className="input-field font-semibold text-navy-900"
               />
             </div>
@@ -352,9 +365,9 @@ export default function PropertyFormPage() {
                 Condomínio Mensal (R$)
               </label>
               <input
-                type="number"
+                type="text"
                 min="0"
-                value={formData.condoFee}
+                value={formatNumberWithDots(formData.condoFee)}
                 onChange={e => setFormData({ ...formData, condoFee: e.target.value })}
                 placeholder="Ex: 850"
                 className="input-field"
@@ -366,11 +379,11 @@ export default function PropertyFormPage() {
                 IPTU Anual (R$)
               </label>
               <input
-                type="number"
+                type="text"
                 min="0"
-                value={formData.iptu}
+                value={formatNumberWithDots(formData.iptu)}
                 onChange={e => setFormData({ ...formData, iptu: e.target.value })}
-                placeholder="Ex: 1600"
+                placeholder="Ex: 1.600"
                 className="input-field"
               />
             </div>
