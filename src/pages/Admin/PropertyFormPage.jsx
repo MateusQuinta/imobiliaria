@@ -193,6 +193,11 @@ export default function PropertyFormPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    console.log('Iniciando salvamento do imóvel...')
+    console.log('FormData:', formData)
+    console.log('Images:', images)
+    console.log('User:', user)
+
     if (images.length === 0) {
       toast.error('Adicione ao menos 1 foto principal para o imóvel.')
       return
@@ -257,12 +262,18 @@ export default function PropertyFormPage() {
       }
 
       let error
+      console.log('Dados que serão salvos:', propertyData)
+
       if (isEdit) {
+        console.log('Modo edição, atualizando imóvel...')
         const res = await supabase.from('properties').update(propertyData).eq('id', id)
         error = res.error
+        console.log('Resultado edição:', res)
       } else {
+        console.log('Modo criação, inserindo novo imóvel...')
         const res = await supabase.from('properties').insert(propertyData)
         error = res.error
+        console.log('Resultado inserção:', res)
       }
 
       if (error) {
@@ -271,6 +282,8 @@ export default function PropertyFormPage() {
         setLoading(false)
         return
       }
+
+      console.log('Imóvel salvo com sucesso!')
 
       await logAuditEvent({
         userId: user?.id,
