@@ -130,7 +130,7 @@ export default function FinancingTools() {
                 </div>
               </div>
               <a
-                href="https://wa.me/5511999990000"
+                href="https://wa.me/5512997778899?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista%20em%20financiamento%20imobili%C3%A1rio."
                 target="_blank" rel="noopener noreferrer"
                 className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold py-3 rounded-xl border border-gold-400 text-gold-300 hover:bg-gold-500/20 transition w-full"
               >
@@ -174,7 +174,7 @@ export default function FinancingTools() {
                 </Link>
               </div>
               <a
-                href="https://wa.me/5511999990000"
+                href="https://wa.me/5512997778899?text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20especialista%20em%20financiamento%20imobili%C3%A1rio."
                 target="_blank" rel="noopener noreferrer"
                 className="mt-6 flex items-center justify-center gap-2 text-sm font-semibold py-3 rounded-xl border border-gold-400 text-gold-300 hover:bg-gold-500/20 transition w-full"
               >

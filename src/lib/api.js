@@ -86,8 +86,8 @@ export async function getAgencySettings() {
         lead_distribution_rule: 'round_robin',
         company_name: 'Viva Belle Imobiliária',
         company_creci: '12345-J',
-        company_phone: '(12) 3900-0000',
-        company_whatsapp: '5512999990000',
+        company_phone: '(12) 3632-4000',
+        company_whatsapp: '5512997778899',
         company_email: 'contato@vivabelle.com.br'
       }
     }
@@ -99,8 +99,8 @@ export async function getAgencySettings() {
       lead_distribution_rule: 'round_robin',
       company_name: 'Viva Belle Imobiliária',
       company_creci: '12345-J',
-      company_phone: '(12) 3900-0000',
-      company_whatsapp: '5512999990000',
+      company_phone: '(12) 3632-4000',
+      company_whatsapp: '5512997778899',
       company_email: 'contato@vivabelle.com.br'
     }
   }

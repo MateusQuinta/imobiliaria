@@ -12,6 +12,7 @@ import {
   ArrowLeft,
   Home,
   CheckCircle2,
+  ShieldCheck,
 } from 'lucide-react'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
@@ -449,8 +450,8 @@ export default function PropertyDetailPage() {
 
                 {/* Ações Rápidas */}
                 <a
-                  href={`https://wa.me/5512999990000?text=${encodeURIComponent(
-                    `Olá, tenho interesse no imóvel "${property.title}" (Ref #${property.id}) anunciado no site da Viva Belle Imobiliária.`
+                  href={`https://wa.me/5512997778899?text=${encodeURIComponent(
+                    `Olá, tenho interesse no imóvel "${property.title}" (Ref #${property.id}) anunciado no site da Viva Belle Imobiliária em Taubaté.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -462,11 +463,11 @@ export default function PropertyDetailPage() {
                 </a>
 
                 <a
-                  href="tel:1239000000"
+                  href="tel:1236324000"
                   className="btn btn-ghost w-full mt-2.5 justify-center flex items-center gap-2 py-3 text-sm font-semibold"
                 >
                   <Phone size={16} />
-                  (12) 3900-0000
+                  (12) 3632-4000
                 </a>
 
                 {/* Card de Conformidade Legal - Corretor Responsável */}

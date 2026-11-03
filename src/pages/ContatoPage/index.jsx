@@ -335,7 +335,7 @@ export default function ContatoPage() {
             Prefere falar agora com um de nossos corretores?
           </p>
           <a
-            href="https://wa.me/5511999990000"
+            href="https://wa.me/5512997778899?text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20imobili%C3%A1rio%20em%20Taubat%C3%A9."
             target="_blank"
             rel="noopener noreferrer"
             className="btn text-white px-10 py-4 rounded-xl text-lg font-semibold inline-flex items-center gap-3 shadow-md hover:opacity-95 transition"

@@ -63,7 +63,7 @@ export default function ContaSuspensaPage() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <a
-            href={`https://wa.me/5512999990000?text=Ol%C3%A1!%20Meu%20cadastro%20de%20corretor%20(CRECI%20${encodeURIComponent(profile?.creci || '')})%20consta%20como%20${isRejected ? 'rejeitado' : 'suspenso'}.%20Gostaria%20de%20esclarecer.`}
+            href={`https://wa.me/5512997778899?text=Ol%C3%A1!%20Meu%20cadastro%20de%20corretor%20(CRECI%20${encodeURIComponent(profile?.creci || '')})%20consta%20como%20${isRejected ? 'rejeitado' : 'suspenso'}.%20Gostaria%20de%20esclarecer.`}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary flex-1 justify-center gap-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white"

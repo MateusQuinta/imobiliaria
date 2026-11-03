@@ -203,8 +203,8 @@ export default function SobrePage() {
                 </span>
 
                 <a
-                  href={`https://wa.me/5511999990000?text=${encodeURIComponent(
-                    `Olá ${member.name}, encontrei seu perfil no site da Viva Belle Imobiliária e gostaria de conversar.`
+                  href={`https://wa.me/5512997778899?text=${encodeURIComponent(
+                    `Olá ${member.name}, encontrei seu perfil no site da Viva Belle Imobiliária em Taubaté e gostaria de conversar.`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

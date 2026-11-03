@@ -105,7 +105,7 @@ export default function CadastroEmAnalisePage() {
           </button>
 
           <a
-            href="https://wa.me/5512999990000?text=Ol%C3%A1!%20Enviei%20meu%20cadastro%20de%20corretor%20na%20Viva%20Belle%20e%20gostaria%20de%20saber%20o%20status."
+            href="https://wa.me/5512997778899?text=Ol%C3%A1!%20Enviei%20meu%20cadastro%20de%20corretor%20na%20Viva%20Belle%20e%20gostaria%20de%20saber%20o%20status."
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-secondary flex-1 justify-center gap-2 py-3 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border-emerald-200"
