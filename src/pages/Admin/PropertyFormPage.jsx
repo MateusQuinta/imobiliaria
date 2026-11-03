@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { getAgencySettings, logAuditEvent } from '../../lib/api'
+import { saveStoredProperty } from '../../lib/propertiesStorage'
 import ImageUploader from '../../components/Admin/ImageUploader'
 import { 
   Building2, 
@@ -266,29 +267,38 @@ export default function PropertyFormPage() {
         propertyData.created_at = new Date().toISOString()
       }
 
-      let error
       console.log('Dados que serão salvos:', propertyData)
 
+      // Tenta salvar no Supabase primeiro
+      let error
+      let savedProperty = null
+
       if (isEdit) {
-        console.log('Modo edição, atualizando imóvel...')
+        console.log('Modo edição, atualizando imóvel no Supabase...')
         const res = await supabase.from('properties').update(propertyData).eq('id', id)
         error = res.error
-        console.log('Resultado edição:', res)
+        savedProperty = res.data?.[0]
+        console.log('Resultado edição Supabase:', res)
       } else {
-        console.log('Modo criação, inserindo novo imóvel...')
-        const res = await supabase.from('properties').insert(propertyData)
+        console.log('Modo criação, inserindo novo imóvel no Supabase...')
+        const res = await supabase.from('properties').insert(propertyData).select()
         error = res.error
-        console.log('Resultado inserção:', res)
+        savedProperty = res.data?.[0]
+        console.log('Resultado inserção Supabase:', res)
       }
 
       if (error) {
-        console.error('Database error:', error)
-        toast.error(`Erro ao salvar: ${error.message}`)
+        console.error('Erro ao salvar no Supabase:', error)
+        toast.error(`Erro ao salvar no banco: ${error.message}`)
         setLoading(false)
         return
       }
 
-      console.log('Imóvel salvo com sucesso!')
+      console.log('Imóvel salvo no Supabase com sucesso:', savedProperty)
+
+      // Salva também no localStorage como backup
+      const savedLocal = saveStoredProperty(propertyData, isEdit ? id : savedProperty?.id)
+      console.log('Imóvel persistido no armazenamento local:', savedLocal)
 
       await logAuditEvent({
         userId: user?.id,
@@ -296,7 +306,7 @@ export default function PropertyFormPage() {
         userRole: profile?.role,
         action: isEdit ? 'atualizacao_imovel' : 'criacao_imovel',
         targetType: 'properties',
-        targetId: id || 'novo',
+        targetId: id || savedLocal.id || 'novo',
         details: { title: formData.title, price: priceDisplay, broker: brokerName }
       })
 

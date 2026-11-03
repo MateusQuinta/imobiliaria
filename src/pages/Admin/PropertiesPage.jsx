@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { logAuditEvent } from '../../lib/api'
-import { getMockProperties } from '../../lib/localAuth'
+import { 
+  getStoredProperties, 
+  updateStoredPropertyStatus, 
+  deleteStoredProperty 
+} from '../../lib/propertiesStorage'
 import { 
   Plus, 
   Edit, 
