@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { logAuditEvent } from '../../lib/api'
+import { getMockBrokers } from '../../lib/localAuth'
 import { 
   UserCheck, 
   ExternalLink, 
@@ -22,7 +23,7 @@ import {
 import toast from 'react-hot-toast'
 
 export default function ApprovalsPage() {
-  const { user, profile } = useAuth()
+  const { user, profile, isLocalMode } = useAuth()
   const [pendingBrokers, setPendingBrokers] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -40,6 +41,10 @@ export default function ApprovalsPage() {
   async function fetchPendingBrokers() {
     setLoading(true)
     try {
+      if (isLocalMode) {
+        setPendingBrokers(getMockBrokers().filter(b => b.status === 'pending'))
+        return
+      }
       const { data, error } = await supabase
         .from('admin_users')
         .select('*')

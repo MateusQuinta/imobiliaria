@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { logAuditEvent } from '../../lib/api'
+import { getMockProperties } from '../../lib/localAuth'
 import { 
   Plus, 
   Edit, 
@@ -19,7 +20,7 @@ import {
 import toast from 'react-hot-toast'
 
 export default function PropertiesPage() {
-  const { user, profile, isAdmin } = useAuth()
+  const { user, profile, isAdmin, isLocalMode } = useAuth()
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
@@ -32,20 +33,20 @@ export default function PropertiesPage() {
   async function fetchProperties() {
     setLoading(true)
     try {
-      let query = supabase.from('properties').select('*').order('created_at', { ascending: false })
-      
-      // Se corretor, só vê os próprios imóveis
-      if (!isAdmin && user?.id) {
-        query = query.eq('created_by', user.id)
+      if (isLocalMode) {
+        // Dados locais de demonstração
+        const brokerId = isAdmin ? null : profile?.id
+        let data = getMockProperties(brokerId)
+        if (filter !== 'all') data = data.filter(p => p.status === filter)
+        setProperties(data)
+      } else {
+        let query = supabase.from('properties').select('*').order('created_at', { ascending: false })
+        if (!isAdmin && user?.id) query = query.eq('created_by', user.id)
+        if (filter !== 'all') query = query.eq('status', filter)
+        const { data, error } = await query
+        if (error) throw error
+        setProperties(data || [])
       }
-
-      if (filter !== 'all') {
-        query = query.eq('status', filter)
-      }
-
-      const { data, error } = await query
-      if (error) throw error
-      setProperties(data || [])
     } catch (error) {
       toast.error('Erro ao carregar imóveis.')
       console.error(error)

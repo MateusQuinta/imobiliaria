@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { logAuditEvent } from '../../lib/api'
+import { getMockBrokers } from '../../lib/localAuth'
 import { 
   Users, 
   Search, 
@@ -20,7 +21,7 @@ import {
 import toast from 'react-hot-toast'
 
 export default function BrokersManagementPage() {
-  const { user, profile } = useAuth()
+  const { user, profile, isLocalMode } = useAuth()
   const [brokers, setBrokers] = useState([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -38,6 +39,10 @@ export default function BrokersManagementPage() {
   async function fetchBrokers() {
     setLoading(true)
     try {
+      if (isLocalMode) {
+        setBrokers(getMockBrokers())
+        return
+      }
       const { data, error } = await supabase
         .from('admin_users')
         .select('*')

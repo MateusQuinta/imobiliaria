@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { logAuditEvent } from '../../lib/api'
+import { getMockLeads, getMockBrokers } from '../../lib/localAuth'
 import { 
   Kanban as KanbanIcon, 
   List, 
@@ -31,7 +32,7 @@ const KANBAN_COLUMNS = [
 ]
 
 export default function LeadsPage() {
-  const { user, profile, isAdmin } = useAuth()
+  const { user, profile, isAdmin, isLocalMode } = useAuth()
   const [leads, setLeads] = useState([])
   const [brokers, setBrokers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -52,6 +53,14 @@ export default function LeadsPage() {
   async function fetchLeadsAndBrokers() {
     setLoading(true)
     try {
+      if (isLocalMode) {
+        // Dados locais de demonstração
+        const brokerId = isAdmin ? null : profile?.id
+        setLeads(getMockLeads(brokerId))
+        if (isAdmin) setBrokers(getMockBrokers().filter(b => b.status === 'active'))
+        return
+      }
+
       // 1. Buscar corretores ativos para opção de reatribuição (se admin)
       if (isAdmin) {
         const { data: brokersData } = await supabase
@@ -63,8 +72,6 @@ export default function LeadsPage() {
 
       // 2. Buscar leads
       let query = supabase.from('leads').select('*').order('created_at', { ascending: false })
-      
-      // Se não for admin, busca apenas os leads atribuídos ao corretor ou não atribuídos
       if (!isAdmin && user?.id) {
         query = query.or(`broker_id.eq.${user.id},broker_id.is.null`)
       }
@@ -72,26 +79,20 @@ export default function LeadsPage() {
       const { data, error } = await query
 
       if (error) {
-        // Fallback: se a tabela nova não tiver dados, busca de contact_forms
+        // Fallback: contact_forms
         const { data: contactsData } = await supabase.from('contact_forms').select('*')
         if (contactsData) {
           const mapped = contactsData.map(c => ({
-            id: c.id,
-            name: c.name,
-            email: c.email,
-            phone: c.phone,
-            subject: c.subject,
-            message: c.message,
+            id: c.id, name: c.name, email: c.email, phone: c.phone,
+            subject: c.subject, message: c.message,
             status: c.status === 'resolvido' ? 'fechado' : 'novo',
-            created_at: c.created_at,
-            history: []
+            created_at: c.created_at, history: []
           }))
           setLeads(mapped)
           return
         }
         throw error
       }
-
       setLeads(data || [])
     } catch (err) {
       console.error('Error fetching leads:', err)
