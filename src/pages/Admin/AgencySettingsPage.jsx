@@ -15,7 +15,7 @@ import {
 import toast from 'react-hot-toast'
 
 export default function AgencySettingsPage() {
-  const { user, profile } = useAuth()
+  const { user, profile, isLocalMode } = useAuth()
   const [settings, setSettings] = useState({
     require_property_moderation: false,
     default_commission_rate: 6.0,
@@ -23,10 +23,10 @@ export default function AgencySettingsPage() {
     company_name: 'Viva Belle Imobiliária Ltda.',
     company_creci: '12345-J',
     company_cnpj: '12.345.678/0001-90',
-    company_phone: '(12) 3900-0000',
-    company_whatsapp: '5512999990000',
+    company_phone: '(12) 3632-4000',
+    company_whatsapp: '5512997778899',
     company_email: 'contato@vivabelle.com.br',
-    company_address: 'Av. Cassiano Ricardo, 1410 - Sala 804, Ed. Hyde Park, Jardim Aquarius, São José dos Campos - SP'
+    company_address: 'Rua Marechal Deodoro, 630 - Centro, Taubaté - SP, CEP 12020-060'
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -35,6 +35,13 @@ export default function AgencySettingsPage() {
     async function loadSettings() {
       setLoading(true)
       try {
+        if (isLocalMode) {
+          const saved = localStorage.getItem('vivabelle_agency_settings')
+          if (saved) {
+            setSettings(JSON.parse(saved))
+            return
+          }
+        }
         const data = await getAgencySettings()
         setSettings(prev => ({ ...prev, ...data }))
       } catch (err) {
@@ -44,12 +51,18 @@ export default function AgencySettingsPage() {
       }
     }
     loadSettings()
-  }, [])
+  }, [isLocalMode])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
     try {
+      if (isLocalMode) {
+        localStorage.setItem('vivabelle_agency_settings', JSON.stringify(settings))
+        toast.success('Configurações salvas localmente (Modo Demo)!')
+        return
+      }
+
       const { error } = await supabase
         .from('agency_settings')
         .upsert({

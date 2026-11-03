@@ -308,7 +308,7 @@ export default function DashboardPage() {
                   <div className="p-3.5 bg-warm-50 rounded-xl border border-warm-100 flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold text-navy-900">Região de Atuação</p>
-                      <p className="text-xs text-warm-500">Vale do Paraíba (SJC e Região)</p>
+                      <p className="text-xs text-warm-500">Taubaté e Vale do Paraíba</p>
                     </div>
                     <span className="text-xs font-bold text-gold-600">Ativo</span>
                   </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
+import { getMockCommissions } from '../../lib/localAuth'
 import { 
   DollarSign, 
   TrendingUp, 
@@ -14,17 +15,50 @@ import {
 } from 'lucide-react'
 
 export default function CommissionsPage() {
-  const { user, profile, isAdmin } = useAuth()
+  const { user, profile, isAdmin, isLocalMode } = useAuth()
   const [commissions, setCommissions] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchCommissions()
-  }, [user, isAdmin])
+  }, [user, isAdmin, isLocalMode])
 
   async function fetchCommissions() {
     setLoading(true)
     try {
+      if (isLocalMode) {
+        setCommissions([
+          {
+            id: 'c1',
+            property_title: 'Apartamento de Alto Padrão no Jardim das Nações',
+            deal_value: 1850000,
+            commission_rate: 3.0,
+            commission_amount: 55500,
+            status: 'pago',
+            closed_at: '2026-02-10'
+          },
+          {
+            id: 'c2',
+            property_title: 'Cobertura Vista Panorâmica no Areão',
+            deal_value: 8500,
+            commission_rate: 50.0,
+            commission_amount: 4250,
+            status: 'a_receber',
+            closed_at: '2026-02-18'
+          },
+          {
+            id: 'c3',
+            property_title: 'Casa em Condomínio Fechado em Quiririm',
+            deal_value: 2650000,
+            commission_rate: 3.5,
+            commission_amount: 92750,
+            status: 'processando',
+            closed_at: '2026-02-22'
+          }
+        ])
+        return
+      }
+
       let query = supabase.from('commissions').select('*').order('closed_at', { ascending: false })
       if (!isAdmin && user?.id) {
         query = query.eq('broker_id', user.id)
@@ -34,11 +68,10 @@ export default function CommissionsPage() {
       if (!error && data && data.length > 0) {
         setCommissions(data)
       } else {
-        // Fallback demonstrativo inicial
         setCommissions([
           {
             id: 'c1',
-            property_title: 'Apartamento de Alto Padrão no Jardim Aquarius',
+            property_title: 'Apartamento de Alto Padrão no Jardim das Nações',
             deal_value: 1850000,
             commission_rate: 3.0,
             commission_amount: 55500,
@@ -47,19 +80,19 @@ export default function CommissionsPage() {
           },
           {
             id: 'c2',
-            property_title: 'Cobertura Vista Panorâmica na Vila Ema',
-            deal_value: 9500,
+            property_title: 'Cobertura Vista Panorâmica no Areão',
+            deal_value: 8500,
             commission_rate: 50.0,
-            commission_amount: 4750,
+            commission_amount: 4250,
             status: 'a_receber',
             closed_at: '2026-02-18'
           },
           {
             id: 'c3',
-            property_title: 'Residencial Reserva da Serra no Urbanova',
-            deal_value: 890000,
+            property_title: 'Casa em Condomínio Fechado em Quiririm',
+            deal_value: 2650000,
             commission_rate: 3.5,
-            commission_amount: 31150,
+            commission_amount: 92750,
             status: 'processando',
             closed_at: '2026-02-22'
           }

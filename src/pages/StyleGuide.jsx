@@ -528,7 +528,7 @@ export default function StyleGuide() {
                 Conectamos famílias do Vale do Paraíba aos melhores imóveis de médio e alto padrão, com atendimento humano.
               </p>
               <p className="font-sans text-sm font-normal text-warm-400 mb-4">
-                3 quartos · 2 vagas · 142 m² · Jardim Aquarius, São José dos Campos
+                3 quartos · 2 vagas · 142 m² · Jardim das Nações, Taubaté
               </p>
               <p className="text-xs font-mono text-warm-400">
                 @import: Google Fonts — Inter<br/>

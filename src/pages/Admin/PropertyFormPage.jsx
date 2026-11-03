@@ -21,15 +21,31 @@ import {
 import toast from 'react-hot-toast'
 
 const CITIES = [
-  'São José dos Campos',
   'Taubaté',
-  'Jacareí',
-  'Caçapava',
   'Pindamonhangaba',
+  'Tremembé',
+  'Caçapava',
+  'Jacareí',
+  'São José dos Campos',
   'Campos do Jordão'
 ]
 
 const NEIGHBORHOODS_BY_CITY = {
+  'Taubaté': [
+    'Jardim das Nações',
+    'Areão',
+    'Quiririm',
+    'Parque da Independência',
+    'Chácara Silvestre',
+    'Centro',
+    'Chácara Urbana',
+    'Alto das Pombas',
+    'Jaboticabeiras',
+    'Parque São João',
+    'São Gonçalo',
+    'Barranco',
+    'Bonfim'
+  ],
   'São José dos Campos': [
     'Jardim Aquarius',
     'Urbanova',
@@ -37,18 +53,7 @@ const NEIGHBORHOODS_BY_CITY = {
     'Jardim das Colinas',
     'Vila Adyana',
     'Esplanada',
-    'Jardim das Indústrias',
-    'Santana',
-    'Bosque dos Eucaliptos',
-    'Parque Residencial Aquarius'
-  ],
-  'Taubaté': [
-    'Quiririm',
-    'Independência',
-    'Jaboticabeiras',
-    'Barranco',
-    'Bonfim',
-    'Vila São José'
+    'Jardim das Indústrias'
   ],
   'Jacareí': [
     'Villa Branca',
@@ -101,8 +106,8 @@ export default function PropertyFormPage() {
     title: '',
     type: 'VENDA',
     category: 'Apartamento',
-    city: 'São José dos Campos',
-    neighborhood: 'Jardim Aquarius',
+    city: 'Taubaté',
+    neighborhood: 'Jardim das Nações',
     cep: '',
     address: '',
     number: '',
@@ -146,8 +151,8 @@ export default function PropertyFormPage() {
               title: data.title || '',
               type: data.type || 'VENDA',
               category: data.category || 'Apartamento',
-              city: data.city || 'São José dos Campos',
-              neighborhood: data.neighborhood || 'Jardim Aquarius',
+              city: data.city || 'Taubaté',
+              neighborhood: data.neighborhood || 'Jardim das Nações',
               cep: data.cep || '',
               address: data.address || '',
               number: data.number || '',
@@ -311,7 +316,7 @@ export default function PropertyFormPage() {
   }
 
   const currentNeighborhoods = NEIGHBORHOODS_BY_CITY[formData.city] || [
-    'Jardim Aquarius', 'Urbanova', 'Vila Ema', 'Jardim das Colinas', 'Centro'
+    'Jardim das Nações', 'Areão', 'Quiririm', 'Parque da Independência', 'Centro'
   ]
 
   return (
@@ -350,7 +355,7 @@ export default function PropertyFormPage() {
                 required
                 value={formData.title}
                 onChange={e => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Ex: Apartamento de Alto Padrão no Jardim Aquarius com Varanda Gourmet"
+                placeholder="Ex: Apartamento de Alto Padrão no Jardim das Nações com Varanda Gourmet"
                 className="input-field"
               />
             </div>

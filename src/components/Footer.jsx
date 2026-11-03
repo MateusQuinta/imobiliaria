@@ -39,8 +39,8 @@ const LINKS = {
     { label: 'Casas em Condomínio', to: '/imoveis?categoria=casa&tipo=venda' },
     { label: 'Coberturas', to: '/imoveis?categoria=cobertura&tipo=venda' },
     { label: 'Lançamentos no Vale', to: '/imoveis?tipo=lancamento' },
-    { label: 'Jardim Aquarius & Colinas', to: '/imoveis?bairro=Jardim+Aquarius+(SJC)' },
-    { label: 'Urbanova & Zona Oeste', to: '/imoveis?bairro=Urbanova+(SJC)' },
+    { label: 'Jardim das Nações', to: '/imoveis?bairro=Jardim+das+Nações+(Taubaté)' },
+    { label: 'Areão & Quiririm', to: '/imoveis?bairro=Areão+(Taubaté)' },
   ],
   alugar: [
     { label: 'Apartamentos', to: '/imoveis?categoria=apartamento&tipo=aluguel' },
@@ -67,7 +67,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <LogoWordmark size="sm" dark />
             <p className="text-white/60 text-sm leading-relaxed mt-4 max-w-sm">
-              Conectamos famílias do Vale do Paraíba aos melhores imóveis de médio e alto padrão em São José dos Campos, Taubaté, Jacareí e região. Atendimento humano, exclusivo e com total rigor jurídico.
+              Conectamos famílias de Taubaté e do Vale do Paraíba aos melhores imóveis de médio e alto padrão. Atendimento humano, consultoria especializada e com total rigor jurídico e credenciamento no CRECI-SP.
             </p>
             <div className="flex gap-3 mt-6">
               {SOCIAL_ICONS.map((Icon, i) => (
@@ -78,10 +78,10 @@ export default function Footer() {
             </div>
             <div className="mt-6 pt-6 border-t border-white/8 flex flex-col gap-2">
               <span className="flex items-center gap-2 text-xs text-white/60">
-                <MapPin size={14} className="text-gold-400 shrink-0" /> Av. Cassiano Ricardo, 1410 - Sala 804, Ed. Hyde Park, Jardim Aquarius, São José dos Campos - SP
+                <MapPin size={14} className="text-gold-400 shrink-0" /> Rua Marechal Deodoro, 630 - Centro, Taubaté - SP, CEP 12020-060
               </span>
               <span className="flex items-center gap-2 text-xs text-white/60">
-                <Phone size={14} className="text-gold-400 shrink-0" /> (12) 3900-0000 &middot; WhatsApp: (12) 99999-0000
+                <Phone size={14} className="text-gold-400 shrink-0" /> (12) 3632-4000 &middot; WhatsApp: (12) 99777-8899
               </span>
               <span className="flex items-center gap-2 text-xs text-white/60">
                 <Mail size={14} className="text-gold-400 shrink-0" /> contato@vivabelle.com.br

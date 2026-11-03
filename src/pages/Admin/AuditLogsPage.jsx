@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
+import { getMockAuditLogs } from '../../lib/localAuth'
 import { 
   FileText, 
   Download, 
@@ -15,17 +16,22 @@ import {
 import toast from 'react-hot-toast'
 
 export default function AuditLogsPage() {
-  const { user } = useAuth()
+  const { user, isLocalMode } = useAuth()
   const [logs, setLogs] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchLogs()
-  }, [])
+  }, [isLocalMode])
 
   async function fetchLogs() {
     setLoading(true)
     try {
+      if (isLocalMode) {
+        setLogs(getMockAuditLogs())
+        return
+      }
+
       const { data, error } = await supabase
         .from('audit_logs')
         .select('*')

@@ -15,10 +15,10 @@ const MOCK_USERS = [
     creci: '12345-J',
     creci_uf: 'SP',
     creci_type: 'definitivo',
-    city: 'São José dos Campos',
-    phone: '(12) 99999-0001',
+    city: 'Taubaté',
+    phone: '(12) 3632-4000',
     avatar_url: null,
-    bio: 'Diretor e administrador da Viva Belle Imobiliária.'
+    bio: 'Diretor e administrador da Viva Belle Imobiliária em Taubaté.'
   },
   {
     id: 'corretor-001',
@@ -33,22 +33,22 @@ const MOCK_USERS = [
     city: 'Taubaté',
     phone: '(12) 99888-7766',
     avatar_url: null,
-    bio: 'Especialista em imóveis residenciais no Vale do Paraíba.'
+    bio: 'Especialista em imóveis de médio e alto padrão em Taubaté e Vale do Paraíba.'
   },
   {
     id: 'pendente-001',
     email: 'pendente@teste.com',
     password: 'Teste123!',
-    name: 'José Pendente',
+    name: 'Marcos Pendente',
     role: 'corretor',
     status: 'pending',
     creci: '99999-G',
     creci_uf: 'SP',
     creci_type: 'provisorio',
-    city: 'Jacareí',
+    city: 'Taubaté',
     phone: '(12) 98888-5544',
     avatar_url: null,
-    bio: ''
+    bio: 'Corretor parceiro aguardando validação de credencial no CRECI-SP.'
   }
 ]
 
@@ -84,7 +84,7 @@ export function getMockProperties(brokerId = null) {
   const base = [
     {
       id: 1,
-      title: 'Casa em Condomínio Jardim Aquarius',
+      title: 'Casa em Condomínio Jardim das Nações',
       type: 'casa',
       purpose: 'venda',
       price: 1250000,
@@ -93,8 +93,8 @@ export function getMockProperties(brokerId = null) {
       bathrooms: 3,
       suites: 2,
       parking: 3,
-      city: 'São José dos Campos',
-      neighborhood: 'Jardim Aquarius',
+      city: 'Taubaté',
+      neighborhood: 'Jardim das Nações',
       status: 'ativo',
       moderation_status: 'publicado',
       broker_id: 'admin-001',
@@ -104,7 +104,7 @@ export function getMockProperties(brokerId = null) {
     },
     {
       id: 2,
-      title: 'Apartamento Alto Padrão Urbanova',
+      title: 'Apartamento Alto Padrão Areão',
       type: 'apartamento',
       purpose: 'venda',
       price: 890000,
@@ -113,8 +113,8 @@ export function getMockProperties(brokerId = null) {
       bathrooms: 2,
       suites: 1,
       parking: 2,
-      city: 'São José dos Campos',
-      neighborhood: 'Urbanova',
+      city: 'Taubaté',
+      neighborhood: 'Areão',
       status: 'ativo',
       moderation_status: 'publicado',
       broker_id: 'corretor-001',
@@ -124,7 +124,7 @@ export function getMockProperties(brokerId = null) {
     },
     {
       id: 3,
-      title: 'Terreno Jardim das Colinas',
+      title: 'Terreno Chácara Urbana',
       type: 'terreno',
       purpose: 'venda',
       price: 320000,
@@ -133,8 +133,8 @@ export function getMockProperties(brokerId = null) {
       bathrooms: 0,
       suites: 0,
       parking: 0,
-      city: 'São José dos Campos',
-      neighborhood: 'Jardim das Colinas',
+      city: 'Taubaté',
+      neighborhood: 'Chácara Urbana',
       status: 'vendido',
       moderation_status: 'vendido',
       broker_id: 'admin-001',
@@ -154,9 +154,9 @@ export function getMockLeads(brokerId = null) {
       name: 'Maria Silva',
       email: 'maria@email.com',
       phone: '(12) 99111-2233',
-      subject: 'Interesse em Casa Jardim Aquarius',
+      subject: 'Interesse em Casa Jardim das Nações',
       message: 'Gostaria de agendar uma visita para o final de semana.',
-      property_title: 'Casa em Condomínio Jardim Aquarius',
+      property_title: 'Casa em Condomínio Jardim das Nações',
       broker_id: 'admin-001',
       status: 'novo',
       notes: '',
@@ -167,12 +167,12 @@ export function getMockLeads(brokerId = null) {
       name: 'João Santos',
       email: 'joao@email.com',
       phone: '(12) 98222-3344',
-      subject: 'Quero saber mais sobre apartamento Urbanova',
+      subject: 'Quero saber mais sobre apartamento Areão',
       message: 'Vi o apartamento no site e tenho interesse. Pode me chamar?',
-      property_title: 'Apartamento Alto Padrão Urbanova',
+      property_title: 'Apartamento Alto Padrão Areão',
       broker_id: 'corretor-001',
       status: 'em_contato',
-      notes: 'Ligação feita em 24/10. Aguardando resposta.',
+      notes: 'Ligação feita em 24/10. Aguardando retorno.',
       created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
     },
     {
@@ -180,9 +180,9 @@ export function getMockLeads(brokerId = null) {
       name: 'Ana Ferreira',
       email: 'ana@email.com',
       phone: '(12) 97333-4455',
-      subject: 'Proposta pelo Jardim Aquarius',
+      subject: 'Proposta pelo Jardim das Nações',
       message: 'Quero fazer uma proposta. Podemos conversar?',
-      property_title: 'Casa em Condomínio Jardim Aquarius',
+      property_title: 'Casa em Condomínio Jardim das Nações',
       broker_id: 'admin-001',
       status: 'proposta',
       notes: 'Proposta recebida: R$ 1.150.000. Em negociação.',
@@ -210,13 +210,13 @@ export function getMockBrokers() {
     },
     {
       id: 'pendente-001',
-      name: 'José Pendente',
+      name: 'Marcos Pendente',
       email: 'pendente@teste.com',
       phone: '(12) 98888-5544',
       creci: '99999-G',
       creci_uf: 'SP',
       creci_type: 'provisorio',
-      city: 'Jacareí',
+      city: 'Taubaté',
       status: 'pending',
       role: 'corretor',
       created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
@@ -230,23 +230,23 @@ export function getMockVisits(brokerId = null) {
       id: 'visit-001',
       lead_name: 'Maria Silva',
       lead_phone: '(12) 99111-2233',
-      property_title: 'Casa em Condomínio Jardim Aquarius',
+      property_title: 'Casa em Condomínio Jardim das Nações',
       scheduled_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       scheduled_time: '10:00',
       status: 'agendada',
       broker_id: 'admin-001',
-      notes: 'Cliente prefere manhã.'
+      notes: 'Cliente prefere período da manhã.'
     },
     {
       id: 'visit-002',
       lead_name: 'João Santos',
       lead_phone: '(12) 98222-3344',
-      property_title: 'Apartamento Alto Padrão Urbanova',
+      property_title: 'Apartamento Alto Padrão Areão',
       scheduled_date: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       scheduled_time: '14:30',
       status: 'agendada',
       broker_id: 'corretor-001',
-      notes: ''
+      notes: 'Cliente já aprovou financiamento prévio.'
     }
   ]
   if (brokerId) return base.filter(v => v.broker_id === brokerId)
@@ -257,7 +257,7 @@ export function getMockCommissions(brokerId = null) {
   const base = [
     {
       id: 'comm-001',
-      property_title: 'Terreno Jardim das Colinas',
+      property_title: 'Terreno Chácara Urbana',
       sale_price: 320000,
       commission_rate: 5,
       commission_amount: 16000,
@@ -269,4 +269,39 @@ export function getMockCommissions(brokerId = null) {
   ]
   if (brokerId) return base.filter(c => c.broker_id === brokerId)
   return base
+}
+
+export function getMockAuditLogs() {
+  return [
+    {
+      id: 'audit-001',
+      action: 'aprovacao_corretor',
+      user_name: 'Admin Principal',
+      user_role: 'admin',
+      entity_type: 'admin_users',
+      entity_id: 'corretor-001',
+      notes: 'Cadastro aprovado após verificação positiva no Conselho CRECI-SP.',
+      created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'audit-002',
+      action: 'cadastro_imovel',
+      user_name: 'Carlos Oliveira',
+      user_role: 'corretor',
+      entity_type: 'properties',
+      entity_id: 'prop-002',
+      notes: 'Imóvel Apartamento Alto Padrão Areão publicado com sucesso.',
+      created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: 'audit-003',
+      action: 'distribuicao_lead',
+      user_name: 'Sistema Automático',
+      user_role: 'sistema',
+      entity_type: 'leads',
+      entity_id: 'lead-002',
+      notes: 'Lead atribuído ao corretor de Taubaté.',
+      created_at: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ]
 }

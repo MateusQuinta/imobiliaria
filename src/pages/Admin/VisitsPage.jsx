@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
+import { getMockVisits } from '../../lib/localAuth'
 import { 
   Calendar, 
   Clock, 
@@ -17,7 +18,7 @@ import {
 import toast from 'react-hot-toast'
 
 export default function VisitsPage() {
-  const { user, profile, isAdmin } = useAuth()
+  const { user, profile, isAdmin, isLocalMode } = useAuth()
   const [visits, setVisits] = useState([])
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
@@ -34,11 +35,20 @@ export default function VisitsPage() {
 
   useEffect(() => {
     fetchVisitsAndProperties()
-  }, [user, isAdmin])
+  }, [user, isAdmin, isLocalMode])
 
   async function fetchVisitsAndProperties() {
     setLoading(true)
     try {
+      if (isLocalMode) {
+        setVisits(getMockVisits(isAdmin ? null : profile?.id))
+        setProperties([
+          { id: 1, title: 'Casa em Condomínio Jardim das Nações' },
+          { id: 2, title: 'Apartamento Alto Padrão Areão' }
+        ])
+        return
+      }
+
       // 1. Buscar imóveis disponíveis para agendamento
       const { data: propsData } = await supabase
         .from('properties')
@@ -62,7 +72,7 @@ export default function VisitsPage() {
             id: 'v1',
             client_name: 'Dra. Mariana Albuquerque',
             client_phone: '(12) 99123-4567',
-            property_title: 'Apartamento de Alto Padrão no Jardim Aquarius',
+            property_title: 'Apartamento de Alto Padrão no Jardim das Nações',
             scheduled_date: new Date(Date.now() + 86400000 * 2).toISOString(),
             status: 'agendada',
             notes: 'Cliente busca imóvel com varanda gourmet e 2 vagas livres.'
@@ -71,10 +81,10 @@ export default function VisitsPage() {
             id: 'v2',
             client_name: 'Eng. Roberto Fontes',
             client_phone: '(12) 98877-6655',
-            property_title: 'Mansão Contemporânea no Jardim das Colinas',
+            property_title: 'Casa em Condomínio Fechado em Quiririm',
             scheduled_date: new Date(Date.now() + 86400000 * 4).toISOString(),
             status: 'agendada',
-            notes: 'Interesse em permuta parcial por terreno no Urbanova.'
+            notes: 'Interesse em visita no fim de semana com a família.'
           }
         ])
       }
@@ -92,9 +102,9 @@ export default function VisitsPage() {
       const combinedDateTime = new Date(`${formData.date}T${formData.time}:00`).toISOString()
 
       const newVisit = {
-        broker_id: user?.id,
+        broker_id: user?.id || profile?.id,
         property_id: formData.property_id ? Number(formData.property_id) : null,
-        property_title: selectedProp?.title || 'Imóvel em São José dos Campos',
+        property_title: selectedProp?.title || 'Imóvel em Taubaté',
         client_name: formData.client_name,
         client_phone: formData.client_phone,
         scheduled_date: combinedDateTime,
@@ -102,10 +112,12 @@ export default function VisitsPage() {
         notes: formData.notes
       }
 
-      const { data, error } = await supabase.from('visits').insert(newVisit).select().single()
+      if (!isLocalMode) {
+        await supabase.from('visits').insert(newVisit)
+      }
 
       toast.success('Visita agendada com sucesso!')
-      setVisits(prev => [data || { ...newVisit, id: `v_${Date.now()}` }, ...prev])
+      setVisits(prev => [{ ...newVisit, id: `v_${Date.now()}` }, ...prev])
       setModalOpen(false)
       setFormData({ property_id: '', client_name: '', client_phone: '', date: '', time: '10:00', notes: '' })
     } catch (err) {

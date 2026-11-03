@@ -301,7 +301,7 @@ export default function ApprovalsPage() {
 
                 <div className="bg-warm-50 p-3.5 rounded-xl border border-warm-100">
                   <span className="text-warm-500 block">Cidade Principal:</span>
-                  <strong className="text-navy-900 text-sm">{broker.city || 'São José dos Campos'}</strong>
+                  <strong className="text-navy-900 text-sm">{broker.city || 'Taubaté'}</strong>
                 </div>
               </div>
 

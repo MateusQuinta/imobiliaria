@@ -117,6 +117,12 @@ export default function LoginPage() {
           <div>
             <div className="flex justify-between items-center mb-1.5">
               <label className="block text-xs font-semibold text-navy-900 uppercase tracking-wider">Senha</label>
+              <Link
+                to="/admin/esqueci-senha"
+                className="text-[11px] font-semibold text-gold-600 hover:text-gold-700 hover:underline transition-colors"
+              >
+                Esqueci minha senha
+              </Link>
             </div>
             <div className="relative">
               <Lock size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-warm-400" />
@@ -155,7 +161,7 @@ export default function LoginPage() {
       </div>
 
       <p className="mt-8 text-xs text-white/40 text-center">
-        Viva Belle Imobiliária &middot; CRECI-SP 12345-J &middot; Vale do Paraíba
+        Viva Belle Imobiliária &middot; CRECI-SP 12345-J &middot; Taubaté - SP
       </p>
     </div>
   )

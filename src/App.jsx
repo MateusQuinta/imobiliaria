@@ -11,10 +11,14 @@ import SobrePage from './pages/SobrePage'
 import ContatoPage from './pages/ContatoPage'
 import StyleGuide from './pages/StyleGuide'
 import SejaUmCorretorPage from './pages/SejaUmCorretorPage/index'
+import BrokerPublicProfilePage from './pages/BrokerPublicProfilePage/index'
+import NotFoundPage from './pages/NotFoundPage'
 
 // Autenticação e Status
 import LoginPage from './pages/Admin/LoginPage'
 import RegisterPage from './pages/Admin/RegisterPage'
+import ForgotPasswordPage from './pages/Admin/ForgotPasswordPage'
+import ResetPasswordPage from './pages/Admin/ResetPasswordPage'
 import CadastroEmAnalisePage from './pages/Admin/CadastroEmAnalisePage'
 import ContaSuspensaPage from './pages/Admin/ContaSuspensaPage'
 
@@ -50,11 +54,14 @@ export default function App() {
             <Route path="/contato" element={<ContatoPage />} />
             <Route path="/vender" element={<ContatoPage />} />
             <Route path="/seja-um-corretor" element={<SejaUmCorretorPage />} />
+            <Route path="/corretor/:id" element={<BrokerPublicProfilePage />} />
             <Route path="/style-guide" element={<StyleGuide />} />
             
             {/* Rotas de Autenticação & Status */}
             <Route path="/admin/login" element={<LoginPage />} />
             <Route path="/admin/register" element={<RegisterPage />} />
+            <Route path="/admin/esqueci-senha" element={<ForgotPasswordPage />} />
+            <Route path="/admin/redefinir-senha" element={<ResetPasswordPage />} />
             <Route path="/cadastro-em-analise" element={<CadastroEmAnalisePage />} />
             <Route path="/conta-suspensa" element={<ContaSuspensaPage />} />
             
@@ -102,8 +109,8 @@ export default function App() {
               } />
             </Route>
 
-            {/* Redirecionamento 404 */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* Página 404 */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

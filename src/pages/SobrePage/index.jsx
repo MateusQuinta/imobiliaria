@@ -71,10 +71,10 @@ export default function SobrePage() {
             </h2>
             <div className="space-y-4 text-warm-600 leading-relaxed text-base">
               <p>
-                Fundada no polo tecnológico e econômico de São José dos Campos, a Viva Belle Imobiliária começou com uma missão clara: criar uma imobiliária de referência regional onde a curadoria de imóveis excepcionais caminhasse lado a lado com a mais absoluta ética comercial e atenção meticulosa aos detalhes.
+                Fundada no polo histórico, universitário e industrial de Taubaté, a Viva Belle Imobiliária começou com uma missão clara: criar uma imobiliária de referência regional onde a curadoria de imóveis excepcionais caminhasse lado a lado com a mais absoluta ética comercial e atenção meticulosa aos detalhes.
               </p>
               <p>
-                Ao longo dos anos, expandimos nossa atuação com consistência pelos bairros e cidades mais valorizados do Vale do Paraíba — incluindo Jardim Aquarius, Urbanova, Jardim das Colinas, Vila Ema, além de Taubaté, Jacareí e a charmosa região da Serra da Mantiqueira. Cada praça conta com corretores especializados que conhecem a fundo as vocações de cada bairro.
+                Ao longo dos anos, consolidamos nossa liderança pelos bairros mais nobres de Taubaté — como Jardim das Nações, Areão, Quiririm, Parque da Independência, Chácara Silvestre e Centro —, além de atender compradores e investidores em todo o Vale do Paraíba e Serra da Mantiqueira. Cada praça conta com corretores especializados que conhecem a fundo as vocações de cada bairro.
               </p>
               <p>
                 Hoje, somos reconhecidos por investidores, famílias e incorporadoras de prestígio como uma referência de liquidez, discrição e segurança jurídica. Nosso compromisso segue o mesmo do primeiro dia: colocar as aspirações de quem nos procura no centro de todas as decisões.
@@ -251,15 +251,15 @@ export default function SobrePage() {
               <div className="flex items-start gap-3 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
                 <MapPin size={20} className="text-gold-500 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-navy-900">Jd. Aquarius — São José dos Campos / SP</p>
-                  <p className="text-warm-500 text-xs mt-0.5">Av. Cassiano Ricardo, 1410 - Sala 804, Ed. Hyde Park, CEP 12246-870</p>
+                  <p className="font-semibold text-navy-900">Centro — Taubaté / SP</p>
+                  <p className="text-warm-500 text-xs mt-0.5">Rua Marechal Deodoro, 630 - Centro, CEP 12020-060</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
                 <Phone size={20} className="text-gold-500 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-navy-900">Central Telefônica & WhatsApp</p>
-                  <p className="text-warm-500 text-xs mt-0.5">(12) 3900-0000 | (12) 99999-0000</p>
+                  <p className="text-warm-500 text-xs mt-0.5">(12) 3632-4000 | (12) 99777-8899</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 bg-white p-4 rounded-xl border border-warm-100 shadow-sm">
@@ -283,12 +283,12 @@ export default function SobrePage() {
             <div className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center text-gold-600 mb-3 shadow-md">
               <MapPin size={32} />
             </div>
-            <p className="font-serif font-bold text-navy-900 text-lg">Av. Cassiano Ricardo, 1410</p>
+            <p className="font-serif font-bold text-navy-900 text-lg">Rua Marechal Deodoro, 630</p>
             <p className="text-xs text-warm-600 mt-1 max-w-xs">
-              Edifício Hyde Park no coração do Aquarius. Valet e estacionamento rotativo no local.
+              Sede no Centro histórico de Taubaté. Fácil acesso e estacionamento conveniado.
             </p>
             <a
-              href="https://maps.google.com/?q=Av.+Cassiano+Ricardo+1410+Sao+Jose+dos+Campos"
+              href="https://maps.google.com/?q=Rua+Marechal+Deodoro+630+Taubate+SP"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary bg-navy-900 text-xs py-2 px-4 mt-4"

@@ -200,7 +200,7 @@ export default function PropertiesPage() {
                         />
                         <div className="min-w-0">
                           <p className="font-semibold text-navy-900 text-sm truncate max-w-xs">{property.title}</p>
-                          <p className="text-[11px] text-warm-500">{property.neighborhood}, {property.city || 'São José dos Campos'}</p>
+                          <p className="text-[11px] text-warm-500">{property.neighborhood}, {property.city || 'Taubaté'}</p>
                         </div>
                       </div>
                     </td>

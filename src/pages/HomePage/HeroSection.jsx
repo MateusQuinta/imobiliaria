@@ -31,13 +31,13 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-6" style={{paddingBottom: '160px'}}>
         <p className="text-xs font-semibold tracking-[0.25em] uppercase text-gold-300 mb-4">
-          Vale do Paraíba · Médio e Alto Padrão
+          Taubaté & Vale do Paraíba · Médio e Alto Padrão
         </p>
         <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] max-w-3xl" style={{textWrap: 'balance'}}>
           Seu novo capítulo<br />começa aqui.
         </h1>
         <p className="text-lg md:text-xl font-light text-white/70 mt-6 max-w-xl leading-relaxed">
-          Mais de 1.400 imóveis de médio e alto padrão no Vale do Paraíba. Com atendimento humano do início ao fim.
+          Mais de 1.400 imóveis de médio e alto padrão em Taubaté e no Vale do Paraíba. Com atendimento humano do início ao fim.
         </p>
       </div>
 

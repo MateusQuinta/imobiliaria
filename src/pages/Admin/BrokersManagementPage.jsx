@@ -260,7 +260,7 @@ export default function BrokersManagementPage() {
 
                       <td className="p-4">
                         <span className="font-bold text-navy-900">CRECI-{broker.creci_uf || 'SP'} {broker.creci || 'Pendente'}</span>
-                        <p className="text-[11px] text-warm-500 mt-0.5">{broker.city || 'São José dos Campos'}</p>
+                        <p className="text-[11px] text-warm-500 mt-0.5">{broker.city || 'Taubaté'}</p>
                       </td>
 
                       <td className="p-4">

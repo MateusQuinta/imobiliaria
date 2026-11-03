@@ -34,7 +34,7 @@ export default function ProfilePage() {
         name: profile.name || '',
         phone: profile.phone || '',
         bio: profile.bio || '',
-        city: profile.city || 'São José dos Campos',
+        city: profile.city || 'Taubaté',
         avatar_url: profile.avatar_url || ''
       })
     }
@@ -197,7 +197,7 @@ export default function ProfilePage() {
               type="text"
               value={formData.city}
               onChange={e => setFormData({...formData, city: e.target.value})}
-              placeholder="São José dos Campos"
+              placeholder="Taubaté"
               className="input-field"
             />
           </div>

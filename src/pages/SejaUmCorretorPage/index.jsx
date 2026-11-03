@@ -33,7 +33,7 @@ export default function SejaUmCorretorPage() {
     creci: '',
     creci_uf: 'SP',
     creci_type: 'definitivo',
-    city: 'São José dos Campos',
+    city: 'Taubaté',
     bio: '',
     avatar_url: '',
     creci_card_front: '',
@@ -174,7 +174,7 @@ export default function SejaUmCorretorPage() {
     {
       icon: Award,
       title: 'Portfólio de Médio e Alto Padrão',
-      desc: 'Imóveis selecionados a dedo nos bairros mais nobres de São José dos Campos, Taubaté e Jacareí.'
+      desc: 'Imóveis selecionados a dedo nos bairros mais nobres de Taubaté e do Vale do Paraíba.'
     },
     {
       icon: Users,
@@ -299,11 +299,12 @@ export default function SejaUmCorretorPage() {
                     onChange={e => setFormData({...formData, city: e.target.value})}
                     className="input-field bg-white"
                   >
-                    <option value="São José dos Campos">São José dos Campos</option>
-                    <option value="Taubaté">Taubaté</option>
-                    <option value="Jacareí">Jacareí</option>
-                    <option value="Caçapava">Caçapava</option>
+                    <option value="Taubaté">Taubaté (Sede)</option>
                     <option value="Pindamonhangaba">Pindamonhangaba</option>
+                    <option value="Caçapava">Caçapava</option>
+                    <option value="Tremembé">Tremembé</option>
+                    <option value="Jacareí">Jacareí</option>
+                    <option value="São José dos Campos">São José dos Campos</option>
                     <option value="Campos do Jordão">Campos do Jordão</option>
                   </select>
                 </div>

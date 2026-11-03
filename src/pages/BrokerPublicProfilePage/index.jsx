@@ -46,11 +46,11 @@ export default function BrokerPublicProfilePage() {
             name: 'Patrícia Oliveira',
             creci: '123.456-F',
             creci_uf: 'SP',
-            city: 'São José dos Campos',
-            phone: '(12) 99999-0000',
+            city: 'Taubaté',
+            phone: '(12) 99777-8899',
             email: 'patricia@vivabelle.com.br',
             avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=500&q=80',
-            bio: 'Especialista em imóveis de médio e alto padrão no Vale do Paraíba com mais de 8 anos de experiência. Foco dedicado nos bairros Jardim Aquarius, Urbanova e Jardim das Colinas em São José dos Campos. Atendimento pautado em discrição e precisão jurídica.'
+            bio: 'Especialista em imóveis de médio e alto padrão em Taubaté e no Vale do Paraíba com mais de 8 anos de experiência. Foco dedicado nos bairros Jardim das Nações, Areão, Quiririm e condomínios fechados da região. Atendimento pautado em discrição, transparência e segurança jurídica.'
           })
         }
 
@@ -190,7 +190,7 @@ export default function BrokerPublicProfilePage() {
 
                   <div className="p-6">
                     <p className="text-xs font-semibold text-gold-600 uppercase tracking-wider">
-                      {prop.neighborhood}, {prop.city || 'São José dos Campos'}
+                      {prop.neighborhood}, {prop.city || 'Taubaté'}
                     </p>
                     <h3 className="font-serif text-lg font-bold text-navy-900 mt-1 mb-4 line-clamp-1 group-hover:text-gold-600 transition">
                       {prop.title}

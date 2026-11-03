@@ -94,7 +94,7 @@ export default function Header() {
 
           {/* WhatsApp */}
           <a
-            href="https://wa.me/5512999990000?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20os%20im%C3%B3veis%20no%20Vale%20do%20Para%C3%ADba"
+            href="https://wa.me/5512997778899?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20os%20im%C3%B3veis%20em%20Taubat%C3%A9%20e%20Vale%20do%20Para%C3%ADba"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-200 shadow-sm"
@@ -138,7 +138,7 @@ export default function Header() {
               <User size={16} /> Área do Corretor / Admin
             </Link>
             <a
-              href="https://wa.me/5512999990000?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20os%20im%C3%B3veis%20no%20Vale%20do%20Para%C3%ADba"
+              href="https://wa.me/5512997778899?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20os%20im%C3%B3veis%20em%20Taubat%C3%A9%20e%20Vale%20do%20Para%C3%ADba"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 btn btn-primary justify-center"

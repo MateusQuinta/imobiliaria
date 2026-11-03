@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 
 const DEFAULT_META = {
-  title: 'Viva Belle Imobiliária — Seu novo capítulo começa aqui | Vale do Paraíba',
-  description: 'A Viva Belle Imobiliária conecta você aos melhores imóveis de médio e alto padrão no Vale do Paraíba: São José dos Campos, Taubaté, Jacareí. Compra, venda e locação com atendimento humano, transparente e exclusivo.',
-  keywords: 'imobiliária, Vale do Paraíba, São José dos Campos, Taubaté, Jacareí, Jardim Aquarius, Urbanova, Vila Ema, Colinas, imóveis alto padrão, comprar imóvel, alugar imóvel, lançamentos',
+  title: 'Viva Belle Imobiliária — Seu novo capítulo começa aqui | Taubaté e Vale do Paraíba',
+  description: 'A Viva Belle Imobiliária conecta você aos melhores imóveis de médio e alto padrão em Taubaté e em todo o Vale do Paraíba. Compra, venda e locação com atendimento humano, transparente e exclusivo.',
+  keywords: 'imobiliária Taubaté, imóveis Taubaté, Vale do Paraíba, Jardim das Nações, Areão, Quiririm, Parque da Independência, Chácara Silvestre, imóveis alto padrão, comprar casa Taubaté, alugar apartamento Taubaté, CRECI Taubaté',
   ogImage: '/og-image.jpg',
 }
 
