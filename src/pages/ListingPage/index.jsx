@@ -5,41 +5,72 @@ import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import SEOHelmet from '../../components/SEOHelmet'
 import LazyImage from '../../components/LazyImage'
-import { PROPERTIES, NEIGHBORHOODS } from '../../data'
+import { NEIGHBORHOODS } from '../../data'
+import { getStoredProperties } from '../../lib/propertiesStorage'
 import { useFavorites } from '../../hooks/useFavorites'
+import { useAuth } from '../../hooks/useAuth'
 import { supabase } from '../../lib/supabase'
+import SkeletonCard from '../../components/SkeletonCard'
 
 export default function ListingPage() {
   const [searchParams] = useSearchParams()
   const paramTipo = searchParams.get('tipo') || 'todos'
   const paramCategoria = searchParams.get('categoria')
+  const paramBusca = searchParams.get('busca') || ''
+  const paramQuartos = searchParams.get('quartos') || '0'
+  const paramBairro = searchParams.get('bairro') || ''
   const { toggleFavorite, isFavorite, favoriteCount } = useFavorites()
+  const { isLocalMode } = useAuth()
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
 
   const [filters, setFilters] = useState({
     tipo: paramTipo,
+    busca: paramBusca,
     categoria: paramCategoria ? [paramCategoria.charAt(0).toUpperCase() + paramCategoria.slice(1)] : [],
-    quartos: '0',
+    quartos: paramQuartos,
     vagas: '0',
     precoMin: '',
     precoMax: '',
-    bairros: [],
+    bairros: paramBairro ? [paramBairro.replace(/\s*\(.*?\)\s*/g, '').trim()] : [],
   })
 
   useEffect(() => {
     const urlTipo = searchParams.get('tipo') || 'todos'
     const urlCat = searchParams.get('categoria')
+    const urlBusca = searchParams.get('busca') || ''
+    const urlQuartos = searchParams.get('quartos') || '0'
+    const urlPreco = searchParams.get('preco') || ''
+    const urlBairro = searchParams.get('bairro') || ''
+
+    let pMin = ''
+    let pMax = ''
+    if (urlPreco === 'Até R$ 500k') pMax = '500000'
+    else if (urlPreco === 'R$ 500k – R$ 1M') { pMin = '500000'; pMax = '1000000' }
+    else if (urlPreco === 'R$ 1M – R$ 2M') { pMin = '1000000'; pMax = '2000000' }
+    else if (urlPreco === 'R$ 2M – R$ 5M') { pMin = '2000000'; pMax = '5000000' }
+    else if (urlPreco === 'Acima de R$ 5M') pMin = '5000000'
+
     setFilters(f => ({
       ...f,
       tipo: urlTipo,
+      busca: urlBusca,
+      quartos: urlQuartos,
+      precoMin: pMin || f.precoMin,
+      precoMax: pMax || f.precoMax,
+      bairros: urlBairro ? [urlBairro.replace(/\s*\(.*?\)\s*/g, '').trim()] : f.bairros,
       categoria: urlCat ? [urlCat.charAt(0).toUpperCase() + urlCat.slice(1)] : f.categoria,
     }))
   }, [searchParams])
 
-  // Buscar imóveis do Supabase
+  // Buscar imóveis do Supabase + armazenamento local
   useEffect(() => {
     async function fetchProperties() {
+      if (isLocalMode) {
+        setProperties(getStoredProperties().filter(p => p.status === 'ativo'))
+        setLoading(false)
+        return
+      }
       try {
         const { data, error } = await supabase
           .from('properties')
@@ -47,19 +78,18 @@ export default function ListingPage() {
           .eq('status', 'ativo')
           .order('created_at', { ascending: false })
         
-        if (error) {
-          console.error('Erro ao buscar imóveis:', error)
-          // Fallback para dados locais se Supabase falhar
-          setProperties(PROPERTIES)
+        if (error || !data) {
+          setProperties(getStoredProperties().filter(p => p.status === 'ativo'))
         } else {
-          // Mapear dados do Supabase para o formato esperado
           const mapped = data.map(p => ({
             id: p.id,
             title: p.title,
             type: p.type,
+            category: p.category || 'Casa',
             priceNum: Number(p.price_num),
             priceDisplay: p.price_display,
             neighborhood: p.neighborhood,
+            city: p.city || 'Taubaté',
             address: p.address,
             beds: p.beds || 0,
             baths: p.baths || 0,
@@ -69,18 +99,19 @@ export default function ListingPage() {
             highlight: p.featured ? 'Destaque' : null,
             tags: p.tags || []
           }))
-          setProperties(mapped)
+          const localOnly = getStoredProperties().filter(p => p.status === 'ativo')
+          const supaIds = new Set(mapped.map(m => String(m.id)))
+          setProperties([...mapped, ...localOnly.filter(l => !supaIds.has(String(l.id)))])
         }
       } catch (error) {
-        console.error('Erro ao buscar imóveis:', error)
-        setProperties(PROPERTIES)
+        setProperties(getStoredProperties().filter(p => p.status === 'ativo'))
       } finally {
         setLoading(false)
       }
     }
     
     fetchProperties()
-  }, [])
+  }, [isLocalMode])
 
   const [sort, setSort] = useState('relevancia')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -103,6 +134,15 @@ export default function ListingPage() {
 
   const filtered = useMemo(() => {
     let list = [...properties]
+    if (filters.busca && filters.busca.trim()) {
+      const q = filters.busca.toLowerCase().trim()
+      list = list.filter(p =>
+        (p.title || '').toLowerCase().includes(q) ||
+        (p.neighborhood || '').toLowerCase().includes(q) ||
+        (p.city || '').toLowerCase().includes(q) ||
+        (p.address || '').toLowerCase().includes(q)
+      )
+    }
     if (filters.tipo && filters.tipo.toLowerCase() !== 'todos') {
       const map = {
         'venda': 'VENDA',
@@ -117,7 +157,10 @@ export default function ListingPage() {
       list = list.filter(p => p.type === t)
     }
     if (filters.categoria.length > 0) {
-      list = list.filter(p => filters.categoria.some(c => p.title.toLowerCase().includes(c.toLowerCase())))
+      list = list.filter(p => filters.categoria.some(c =>
+        (p.title || '').toLowerCase().includes(c.toLowerCase()) ||
+        (p.category || '').toLowerCase().includes(c.toLowerCase())
+      ))
     }
     if (filters.quartos && filters.quartos !== '0' && filters.quartos !== 'Qualquer') {
       const min = parseInt(filters.quartos, 10)
@@ -128,7 +171,8 @@ export default function ListingPage() {
       list = list.filter(p => p.parking >= min)
     }
     if (filters.bairros.length > 0) {
-      list = list.filter(p => filters.bairros.includes(p.neighborhood))
+      const cleanSelected = filters.bairros.map(b => b.replace(/\s*\(.*?\)\s*/g, '').trim().toLowerCase())
+      list = list.filter(p => cleanSelected.includes((p.neighborhood || '').toLowerCase()))
     }
     if (filters.precoMin) {
       const min = Number(filters.precoMin.replace(/\D/g, ''))

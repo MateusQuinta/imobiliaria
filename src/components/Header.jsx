@@ -64,11 +64,12 @@ export default function Header() {
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Favoritos */}
           <Link
-            to="/imoveis"
+            to="/favoritos"
             className={`relative p-2 rounded-lg transition-colors ${
               transparent ? 'text-white/85 hover:bg-white/10' : 'text-warm-600 hover:bg-warm-50'
             }`}
             aria-label="Favoritos"
+            title="Meus Favoritos"
           >
             <Heart size={20} />
             {favoriteCount > 0 && (

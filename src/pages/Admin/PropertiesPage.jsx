@@ -32,15 +32,14 @@ export default function PropertiesPage() {
 
   useEffect(() => {
     fetchProperties()
-  }, [filter, user, isAdmin])
+  }, [filter, user, isAdmin, isLocalMode])
 
   async function fetchProperties() {
     setLoading(true)
     try {
       if (isLocalMode) {
-        // Dados locais de demonstração
         const brokerId = isAdmin ? null : profile?.id
-        let data = getMockProperties(brokerId)
+        let data = getStoredProperties(brokerId)
         if (filter !== 'all') data = data.filter(p => p.status === filter)
         setProperties(data)
       } else {
@@ -48,12 +47,21 @@ export default function PropertiesPage() {
         if (!isAdmin && user?.id) query = query.eq('created_by', user.id)
         if (filter !== 'all') query = query.eq('status', filter)
         const { data, error } = await query
-        if (error) throw error
+        if (error) {
+          console.warn('Supabase fallback to local storage:', error)
+          const brokerId = isAdmin ? null : profile?.id
+          let localData = getStoredProperties(brokerId)
+          if (filter !== 'all') localData = localData.filter(p => p.status === filter)
+          setProperties(localData)
+          return
+        }
         setProperties(data || [])
       }
     } catch (error) {
-      toast.error('Erro ao carregar imóveis.')
-      console.error(error)
+      const brokerId = isAdmin ? null : profile?.id
+      let localData = getStoredProperties(brokerId)
+      if (filter !== 'all') localData = localData.filter(p => p.status === filter)
+      setProperties(localData)
     } finally {
       setLoading(false)
     }
@@ -63,12 +71,13 @@ export default function PropertiesPage() {
   async function handleMarkSold(id, title) {
     if (!confirm(`Deseja marcar o imóvel "${title}" como VENDIDO?`)) return
     try {
-      const { error } = await supabase
-        .from('properties')
-        .update({ status: 'vendido', updated_at: new Date().toISOString() })
-        .eq('id', id)
-
-      if (error) throw error
+      updateStoredPropertyStatus(id, 'vendido')
+      if (!isLocalMode) {
+        await supabase
+          .from('properties')
+          .update({ status: 'vendido', updated_at: new Date().toISOString() })
+          .eq('id', id)
+      }
 
       await logAuditEvent({
         userId: user?.id,
@@ -91,17 +100,33 @@ export default function PropertiesPage() {
   async function handleTogglePause(id, currentStatus, title) {
     const newStatus = currentStatus === 'ativo' ? 'inativo' : 'ativo'
     try {
-      const { error } = await supabase
-        .from('properties')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', id)
-
-      if (error) throw error
+      updateStoredPropertyStatus(id, newStatus)
+      if (!isLocalMode) {
+        await supabase
+          .from('properties')
+          .update({ status: newStatus, updated_at: new Date().toISOString() })
+          .eq('id', id)
+      }
 
       toast.success(newStatus === 'ativo' ? 'Imóvel reativado no site!' : 'Imóvel pausado temporariamente.')
       fetchProperties()
     } catch (err) {
       toast.error('Erro ao alterar status do imóvel.')
+    }
+  }
+
+  // Excluir imóvel
+  async function handleDelete(id, title) {
+    if (!confirm(`Tem certeza que deseja excluir permanentemente o imóvel "${title}"?`)) return
+    try {
+      deleteStoredProperty(id)
+      if (!isLocalMode) {
+        await supabase.from('properties').delete().eq('id', id)
+      }
+      toast.success('Imóvel removido com sucesso!')
+      fetchProperties()
+    } catch (err) {
+      toast.error('Erro ao excluir imóvel.')
     }
   }
 
@@ -184,54 +209,54 @@ export default function PropertiesPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-warm-50 text-[11px] font-bold uppercase tracking-wider text-warm-500 border-b border-warm-200">
-                  <th className="p-4">Imóvel</th>
-                  <th className="p-4">Finalidade</th>
-                  <th className="p-4">Valor</th>
-                  <th className="p-4">Corretor Responsável</th>
-                  <th className="p-4">Status</th>
-                  <th className="p-4">Ações</th>
+                  <th className="px-3 py-3">Imóvel</th>
+                  <th className="px-3 py-3">Finalidade</th>
+                  <th className="px-3 py-3">Valor</th>
+                  <th className="px-3 py-3">Corretor</th>
+                  <th className="px-3 py-3">Status</th>
+                  <th className="px-3 py-3">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-warm-100 text-xs">
                 {filtered.map(property => (
                   <tr key={property.id} className="hover:bg-warm-50 transition">
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-2.5">
                         <img
                           src={property.image || 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&q=80'}
                           alt={property.title}
-                          className="w-14 h-11 rounded-xl object-cover border shrink-0"
+                          className="w-12 h-10 rounded-lg object-cover border shrink-0"
                         />
                         <div className="min-w-0">
-                          <p className="font-semibold text-navy-900 text-sm truncate max-w-xs">{property.title}</p>
-                          <p className="text-[11px] text-warm-500">{property.neighborhood}, {property.city || 'Taubaté'}</p>
+                          <p className="font-semibold text-navy-900 text-sm truncate max-w-[190px]">{property.title}</p>
+                          <p className="text-[11px] text-warm-500 truncate max-w-[190px]">{property.neighborhood}, {property.city || 'Taubaté'}</p>
                         </div>
                       </div>
                     </td>
 
-                    <td className="p-4 font-semibold text-navy-800">
+                    <td className="px-3 py-3 font-semibold text-navy-800 whitespace-nowrap">
                       {property.type}
                     </td>
 
-                    <td className="p-4 font-bold text-navy-900 text-sm">
+                    <td className="px-3 py-3 font-bold text-navy-900 text-sm whitespace-nowrap">
                       {property.price_display || `R$ ${Number(property.price_num || 0).toLocaleString('pt-BR')}`}
                     </td>
 
-                    <td className="p-4">
-                      <p className="font-medium text-navy-900">{property.broker_name || 'Viva Belle Imobiliária'}</p>
+                    <td className="px-3 py-3">
+                      <p className="font-medium text-navy-900 truncate max-w-[130px]">{property.broker_name || 'Viva Belle Imobiliária'}</p>
                       <p className="text-[10px] text-warm-500">{property.broker_creci || 'CRECI 12345-J'}</p>
                     </td>
 
-                    <td className="p-4">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                    <td className="px-3 py-3">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap ${
                         statusBadges[property.status] || 'bg-warm-100 text-warm-700'
                       }`}>
                         {property.status}
                       </span>
                     </td>
 
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
+                    <td className="px-3 py-3">
+                      <div className="flex items-center gap-1">
                         <Link
                           to={`/imoveis/${property.id}`}
                           target="_blank"
@@ -277,6 +302,14 @@ export default function PropertiesPage() {
                             <PlayCircle size={16} />
                           </button>
                         )}
+
+                        <button
+                          onClick={() => handleDelete(property.id, property.title)}
+                          className="p-1.5 text-warm-400 hover:text-red-600 transition"
+                          title="Excluir imóvel"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </div>
                     </td>
                   </tr>

@@ -13,13 +13,20 @@ import {
   Home,
   CheckCircle2,
   ShieldCheck,
+  Share2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Images,
+  Calendar,
 } from 'lucide-react'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import SEOHelmet from '../../components/SEOHelmet'
 import LazyImage from '../../components/LazyImage'
-import { PROPERTIES } from '../../data'
+import { getStoredProperties, getStoredPropertyById } from '../../lib/propertiesStorage'
 import { useFavorites } from '../../hooks/useFavorites'
+import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
 import { submitPropertyInquiry } from '../../lib/api'
 import { supabase } from '../../lib/supabase'
@@ -28,11 +35,20 @@ export default function PropertyDetailPage() {
   const { id } = useParams()
   const [property, setProperty] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const { toggleFavorite, isFavorite } = useFavorites()
+  const { isLocalMode } = useAuth()
 
-  // Buscar imóvel do Supabase
+  // Buscar imóvel do Supabase ou armazenamento local
   useEffect(() => {
     async function fetchProperty() {
+      setLoading(true)
+      if (isLocalMode) {
+        const localProperty = getStoredPropertyById(id)
+        setProperty(localProperty)
+        setLoading(false)
+        return
+      }
       try {
         const { data, error } = await supabase
           .from('properties')
@@ -40,13 +56,13 @@ export default function PropertyDetailPage() {
           .eq('id', id)
           .single()
         
-        if (error) {
-          console.error('Erro ao buscar imóvel:', error)
-          // Fallback para dados locais
-          const localProperty = PROPERTIES.find(p => String(p.id) === String(id))
+        if (error || !data) {
+          const localProperty = getStoredPropertyById(id)
           setProperty(localProperty)
         } else {
-          // Mapear dados
+          const gallery = Array.isArray(data.gallery) && data.gallery.length > 0
+            ? data.gallery
+            : (data.image ? [data.image] : [])
           setProperty({
             id: data.id,
             title: data.title,
@@ -54,20 +70,27 @@ export default function PropertyDetailPage() {
             priceNum: Number(data.price_num),
             priceDisplay: data.price_display,
             neighborhood: data.neighborhood,
+            city: data.city || 'Taubaté',
             address: data.address,
             beds: data.beds || 0,
+            suites: data.suites || 0,
             baths: data.baths || 0,
             parking: data.parking || 0,
             area: data.area,
-            image: data.image,
+            condo_fee: Number(data.condo_fee || 0),
+            iptu: Number(data.iptu || 0),
+            image: data.image || gallery[0],
+            gallery,
             highlight: data.featured ? 'Destaque' : null,
-            tags: data.tags || [],
-            description: data.description
+            tags: data.tags || data.amenities || [],
+            description: data.description,
+            broker_id: data.broker_id,
+            broker_name: data.broker_name,
+            broker_creci: data.broker_creci,
           })
         }
       } catch (error) {
-        console.error('Erro ao buscar imóvel:', error)
-        const localProperty = PROPERTIES.find(p => String(p.id) === String(id))
+        const localProperty = getStoredPropertyById(id)
         setProperty(localProperty)
       } finally {
         setLoading(false)
@@ -75,7 +98,7 @@ export default function PropertyDetailPage() {
     }
     
     fetchProperty()
-  }, [id])
+  }, [id, isLocalMode])
 
   const [currentImg, setCurrentImg] = useState(0)
   const [interestForm, setInterestForm] = useState({
@@ -155,22 +178,44 @@ export default function PropertyDetailPage() {
   }
 
   // Similar properties (exclude current)
-  const similarProperties = PROPERTIES.filter(p => p.id !== property.id).slice(0, 3)
+  const similarProperties = getStoredProperties()
+    .filter(p => String(p.id) !== String(property.id) && (p.status === 'ativo' || !p.status))
+    .slice(0, 3)
 
-  // Gallery variation filters
-  const galleryFilters = [
-    { filter: 'none', label: 'Fachada Principal' },
-    { filter: 'brightness(0.9) contrast(1.05)', label: 'Living Room' },
-    { filter: 'brightness(1.08) saturate(1.15)', label: 'Suíte Master' },
-    { filter: 'saturate(1.25) contrast(1.02)', label: 'Varanda Gourmet' },
-    { filter: 'brightness(0.95) saturate(1.05)', label: 'Lazer e Vista' },
-  ]
+  // Fotos reais da galeria do imóvel
+  const galleryImages = Array.isArray(property.gallery) && property.gallery.length > 0
+    ? property.gallery
+    : (property.image ? [property.image] : [])
+
+  const safeCurrentIdx = currentImg < galleryImages.length ? currentImg : 0
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: property.title, text: `${property.title} — ${property.priceDisplay}`, url: shareUrl })
+        return
+      } catch {}
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      toast.success('Link do imóvel copiado para a área de transferência!')
+    } catch {
+      toast.success('Copie o link na barra do navegador para compartilhar.')
+    }
+  }
+
+  const locationText = [
+    property.address,
+    property.neighborhood,
+    property.city || 'Taubaté'
+  ].filter(Boolean).join(', ')
 
   return (
     <>
       <SEOHelmet
         title={`${property.title} — ${property.neighborhood}`}
-        description={`${property.title} no ${property.neighborhood}. ${property.priceDisplay}. ${property.beds} quartos, ${property.area}m². ${property.type === 'VENDA' ? 'Imóvel à venda' : 'Imóvel para alugar'} com a Viva Belle Imobiliária.`}
+        description={`${property.title} em ${property.neighborhood}, ${property.city || 'Taubaté'}. ${property.priceDisplay}. ${property.beds} quartos, ${property.area}m². ${property.type === 'VENDA' ? 'Imóvel à venda' : 'Imóvel para alugar'} com a Viva Belle Imobiliária.`}
         path={`/imoveis/${property.id}`}
       />
       <Header />
@@ -196,24 +241,102 @@ export default function PropertyDetailPage() {
             </nav>
           </div>
 
-          {/* Galeria */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-2 rounded-2xl overflow-hidden relative shadow-card bg-navy-950">
-            {/* Imagem principal */}
-            <div className="relative h-72 sm:h-96 md:h-[430px] overflow-hidden group">
-              <LazyImage
-                src={property.image}
-                alt={property.title}
-                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-102 cursor-pointer"
-                style={{ filter: galleryFilters[currentImg]?.filter || 'none' }}
-              />
-              <span className={`absolute top-4 left-4 ${badgeClass(property.type)} shadow-md`}>
-                {property.type}
-              </span>
+          {/* Galeria Moderna Responsiva (sem espaços vazios) */}
+          <div className="relative rounded-2xl overflow-hidden shadow-card bg-warm-200">
+            {galleryImages.length <= 1 ? (
+              /* Foto única ocupando 100% da largura com proporção elegante */
+              <div
+                onClick={() => setLightboxOpen(true)}
+                className="relative w-full h-[320px] sm:h-[420px] md:h-[480px] cursor-pointer group overflow-hidden"
+              >
+                <LazyImage
+                  src={galleryImages[0]}
+                  alt={property.title}
+                  className="w-full h-full"
+                  imgClassName="group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/35 via-transparent to-transparent pointer-events-none" />
+              </div>
+            ) : (
+              /* Mosaico com Foto Principal (60%) + até 4 Fotos Reais da Galeria (40%) */
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-2 h-[320px] sm:h-[420px] md:h-[460px]">
+                {/* Foto Principal */}
+                <div
+                  onClick={() => setLightboxOpen(true)}
+                  className={`${
+                    galleryImages.length === 2 ? 'md:col-span-6' : 'md:col-span-7'
+                  } relative h-full cursor-pointer group overflow-hidden`}
+                >
+                  <LazyImage
+                    src={galleryImages[safeCurrentIdx]}
+                    alt={property.title}
+                    className="w-full h-full"
+                    imgClassName="group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950/30 via-transparent to-transparent pointer-events-none" />
+                </div>
+
+                {/* Coluna Direita de Miniaturas Reais */}
+                <div
+                  className={`hidden md:grid ${
+                    galleryImages.length === 2
+                      ? 'md:col-span-6 grid-cols-1 grid-rows-1'
+                      : galleryImages.length === 3
+                        ? 'md:col-span-5 grid-cols-1 grid-rows-2'
+                        : 'md:col-span-5 grid-cols-2 grid-rows-2'
+                  } gap-2 h-full`}
+                >
+                  {galleryImages.slice(1, 5).map((imgUrl, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setCurrentImg(idx + 1)
+                        setLightboxOpen(true)
+                      }}
+                      className={`relative overflow-hidden cursor-pointer group h-full ${
+                        safeCurrentIdx === idx + 1 ? 'ring-2 ring-inset ring-gold-500' : ''
+                      }`}
+                    >
+                      <LazyImage
+                        src={imgUrl}
+                        alt={`${property.title} foto ${idx + 2}`}
+                        className="w-full h-full"
+                        imgClassName="group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-navy-950/10 group-hover:bg-transparent transition-colors pointer-events-none" />
+                      {idx === 3 && galleryImages.length > 5 && (
+                        <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-semibold text-sm">
+                          +{galleryImages.length - 5} fotos
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Badges Superiores */}
+            <span className={`absolute top-4 left-4 z-20 ${badgeClass(property.type)} shadow-md`}>
+              {property.type}
+            </span>
+
+            {/* Ações no Topo Direito: Compartilhar + Favoritar */}
+            <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label="Compartilhar imóvel"
+                title="Compartilhar imóvel"
+                className="w-10 h-10 bg-white/95 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:scale-110 transition text-navy-900"
+              >
+                <Share2 size={17} />
+              </button>
               <button
                 type="button"
                 onClick={() => toggleFavorite(property.id)}
                 aria-label={isFavorite(property.id) ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
-                className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:scale-110 transition"
+                title={isFavorite(property.id) ? 'Remover dos favoritos' : 'Favoritar imóvel'}
+                className="w-10 h-10 bg-white/95 backdrop-blur-md rounded-full flex items-center justify-center shadow-md hover:scale-110 transition"
               >
                 <Heart
                   size={18}
@@ -223,36 +346,79 @@ export default function PropertyDetailPage() {
               </button>
             </div>
 
-            {/* Grid 2x2 lateral */}
-            <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-2 h-[430px]">
-              {galleryFilters.slice(1, 5).map((item, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setCurrentImg(idx + 1)}
-                  className={`relative overflow-hidden cursor-pointer group h-full border-2 transition ${
-                    currentImg === idx + 1 ? 'border-gold-500' : 'border-transparent'
-                  }`}
-                >
-                  <LazyImage
-                    src={property.image}
-                    alt={`${property.title} foto ${idx + 2}`}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    style={{ filter: item.filter }}
-                  />
-                  <div className="absolute inset-0 bg-navy-950/20 group-hover:bg-transparent transition-colors" />
-                </div>
-              ))}
-            </div>
-
-            {/* Botão Ver todas as fotos */}
+            {/* Botão Abrir Galeria em Tela Cheia */}
             <button
               type="button"
-              onClick={() => setCurrentImg((currentImg + 1) % galleryFilters.length)}
-              className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md rounded-lg px-4 py-2 text-xs font-semibold text-navy-900 shadow-lg hover:bg-white transition flex items-center gap-1.5"
+              onClick={() => setLightboxOpen(true)}
+              className="absolute bottom-4 right-4 z-20 bg-white/95 backdrop-blur-md rounded-xl px-4 py-2 text-xs font-semibold text-navy-900 shadow-lg hover:bg-white transition flex items-center gap-2"
             >
-              Ver fotos ({currentImg + 1}/{galleryFilters.length})
+              <Images size={15} className="text-gold-600" />
+              Ver {galleryImages.length > 1 ? `todas as ${galleryImages.length} fotos` : 'foto ampliada'}
             </button>
           </div>
+
+          {/* Modal Lightbox de Fotos em Tela Cheia */}
+          {lightboxOpen && (
+            <div className="fixed inset-0 z-50 bg-navy-950/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-8">
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(false)}
+                className="absolute top-5 right-5 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition"
+                aria-label="Fechar galeria"
+              >
+                <X size={22} />
+              </button>
+
+              <div className="relative w-full max-w-5xl h-[70vh] flex items-center justify-center">
+                {galleryImages.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentImg((safeCurrentIdx - 1 + galleryImages.length) % galleryImages.length)}
+                    className="absolute left-2 sm:left-4 z-10 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                )}
+
+                <img
+                  src={galleryImages[safeCurrentIdx]}
+                  alt={`${property.title} - foto ${safeCurrentIdx + 1}`}
+                  className="max-h-full max-w-full object-contain rounded-xl shadow-2xl"
+                />
+
+                {galleryImages.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setCurrentImg((safeCurrentIdx + 1) % galleryImages.length)}
+                    className="absolute right-2 sm:right-4 z-10 w-11 h-11 rounded-full bg-black/50 hover:bg-black/80 text-white flex items-center justify-center transition"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                )}
+              </div>
+
+              <p className="text-white/80 text-sm mt-4 font-medium">
+                {property.title} — Foto {safeCurrentIdx + 1} de {galleryImages.length}
+              </p>
+
+              {galleryImages.length > 1 && (
+                <div className="flex gap-2 mt-4 overflow-x-auto max-w-full pb-2">
+                  {galleryImages.map((img, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setCurrentImg(i)}
+                      className={`w-16 h-12 rounded-lg overflow-hidden border-2 shrink-0 transition ${
+                        safeCurrentIdx === i ? 'border-gold-400 scale-105' : 'border-transparent opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Layout Principal: 2 Colunas */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-8 mt-10 items-start">
@@ -274,14 +440,21 @@ export default function PropertyDetailPage() {
                 </h1>
                 <p className="text-warm-500 mt-2 flex items-center gap-1.5 text-sm">
                   <MapPin size={16} className="text-gold-500 flex-shrink-0" />
-                  <span>{property.address}, {property.neighborhood} — {property.city}</span>
+                  <span>{locationText}</span>
                 </p>
-                <div className="mt-4 pt-4 border-t border-warm-200 flex items-baseline gap-2">
+                <div className="mt-4 pt-4 border-t border-warm-200 flex flex-wrap items-baseline gap-4">
                   <p className="font-serif font-bold text-3xl sm:text-4xl text-navy-900">
                     {property.priceDisplay}
                   </p>
                   {property.type === 'ALUGUEL' && (
                     <span className="text-warm-400 text-sm">/mês + encargos</span>
+                  )}
+                  {(property.condo_fee > 0 || property.iptu > 0) && (
+                    <span className="text-xs text-warm-500">
+                      {property.condo_fee > 0 && `Condomínio: R$ ${property.condo_fee.toLocaleString('pt-BR')}`}
+                      {property.condo_fee > 0 && property.iptu > 0 && ' · '}
+                      {property.iptu > 0 && `IPTU: R$ ${property.iptu.toLocaleString('pt-BR')}`}
+                    </span>
                   )}
                 </div>
               </div>
@@ -300,11 +473,11 @@ export default function PropertyDetailPage() {
                   <div className="bg-white rounded-xl p-4 flex flex-col items-center gap-1 text-center border border-warm-100 shadow-sm">
                     <BedDouble size={24} className="text-gold-500 mb-1" />
                     <span className="font-semibold text-navy-900 text-lg">{property.beds}</span>
-                    <span className="text-xs text-warm-400">Dormitórios (suítes)</span>
+                    <span className="text-xs text-warm-400">Dormitórios {property.suites > 0 ? `(${property.suites} suítes)` : ''}</span>
                   </div>
                   <div className="bg-white rounded-xl p-4 flex flex-col items-center gap-1 text-center border border-warm-100 shadow-sm">
                     <Bath size={24} className="text-gold-500 mb-1" />
-                    <span className="font-semibold text-navy-900 text-lg">{property.baths || 3}</span>
+                    <span className="font-semibold text-navy-900 text-lg">{property.baths || 1}</span>
                     <span className="text-xs text-warm-400">Banheiros sociais</span>
                   </div>
                   <div className="bg-white rounded-xl p-4 flex flex-col items-center gap-1 text-center border border-warm-100 shadow-sm">
@@ -320,7 +493,7 @@ export default function PropertyDetailPage() {
                   <div className="bg-white rounded-xl p-4 flex flex-col items-center gap-1 text-center border border-warm-100 shadow-sm">
                     <MapPin size={24} className="text-gold-500 mb-1" />
                     <span className="font-semibold text-navy-900 text-lg truncate max-w-full px-1">{property.neighborhood}</span>
-                    <span className="text-xs text-warm-400">Bairro nobre SP</span>
+                    <span className="text-xs text-warm-400">{property.city || 'Taubaté'} - SP</span>
                   </div>
                 </div>
               </div>
@@ -328,16 +501,19 @@ export default function PropertyDetailPage() {
               {/* Seção Sobre este imóvel */}
               <div className="bg-white rounded-2xl p-8 border border-warm-100 shadow-card">
                 <h3 className="font-serif text-2xl font-bold text-navy-900 mb-5">Sobre este imóvel</h3>
-                <div className="space-y-4 text-warm-700 leading-relaxed text-base">
-                  <p>
-                    Localizado em um dos endereços mais cobiçados de {property.neighborhood}, este imóvel traduz com perfeição o conceito de viver bem na capital paulista. Sua planta inteligente foi desenhada para valorizar a luminosidade natural e proporcionar ventilação cruzada durante todo o dia, integrando com harmonia as áreas sociais e íntimas.
-                  </p>
-                  <p>
-                    O projeto de interiores conta com acabamentos de altíssimo padrão, incluindo pisos em mármore importado nas áreas sociais, marcenaria sob medida de linhagem nobre, esquadrias com isolamento acústico de ponta e infraestrutura completa para climatização e automação residencial. A varanda ampla oferece uma vista aberta e definitiva sobre a copa das árvores e o skyline da cidade.
-                  </p>
-                  <p>
-                    O condomínio de torre única dispõe de segurança patrimonial 24 horas com controle biométrico e monitoramento perimetral de última geração. O lazer é completo e refinado, oferecendo piscina aquecida com raia, academia com equipamentos de padrão internacional, espaço gourmet integrado a lounge externo e vagas cobertas com ponto para carregamento de veículos elétricos.
-                  </p>
+                <div className="space-y-4 text-warm-700 leading-relaxed text-base whitespace-pre-line">
+                  {property.description ? (
+                    <p>{property.description}</p>
+                  ) : (
+                    <>
+                      <p>
+                        Localizado em um dos endereços mais valorizados de {property.neighborhood}, em {property.city || 'Taubaté'}, este imóvel traduz com perfeição o equilíbrio entre conforto, sofisticação e qualidade de vida no Vale do Paraíba. Sua planta inteligente foi desenhada para valorizar a luminosidade natural e proporcionar ventilação cruzada durante todo o dia.
+                      </p>
+                      <p>
+                        O projeto conta com acabamentos de excelente padrão, ambientes integrados com harmonia entre as áreas sociais e íntimas, além de fácil acesso às principais vias, escolas, comércios e serviços da região.
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 {/* Comodidades e Tags */}

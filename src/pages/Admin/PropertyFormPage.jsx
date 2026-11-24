@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { getAgencySettings, logAuditEvent } from '../../lib/api'
-import { saveStoredProperty } from '../../lib/propertiesStorage'
+import { saveStoredProperty, getStoredPropertyById } from '../../lib/propertiesStorage'
 import ImageUploader from '../../components/Admin/ImageUploader'
 import { 
   Building2, 
@@ -100,7 +100,7 @@ function parseFormattedNumber(value) {
 export default function PropertyFormPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { user, profile, isAdmin } = useAuth()
+  const { user, profile, isAdmin, isLocalMode } = useAuth()
   const isEdit = !!id
 
   const [formData, setFormData] = useState({
@@ -140,46 +140,52 @@ export default function PropertyFormPage() {
 
       // Se for edição, carregar dados do imóvel
       if (isEdit) {
+        let data = null
         try {
-          const { data, error } = await supabase
+          const res = await supabase
             .from('properties')
             .select('*')
             .eq('id', id)
             .single()
-
-          if (!error && data) {
-            setFormData({
-              title: data.title || '',
-              type: data.type || 'VENDA',
-              category: data.category || 'Apartamento',
-              city: data.city || 'Taubaté',
-              neighborhood: data.neighborhood || 'Jardim das Nações',
-              cep: data.cep || '',
-              address: data.address || '',
-              number: data.number || '',
-              complement: data.complement || '',
-              priceNum: data.price_num ? data.price_num.toString() : '',
-              condoFee: data.condo_fee ? data.condo_fee.toString() : '',
-              iptu: data.iptu ? data.iptu.toString() : '',
-              beds: data.beds ?? 3,
-              suites: data.suites ?? 1,
-              baths: data.baths ?? 2,
-              parking: data.parking ?? 2,
-              area: data.area || '',
-              description: data.description || '',
-              videoUrl: data.video_url || '',
-              featured: data.featured || false,
-              status: data.status || 'ativo',
-              amenities: data.amenities || data.tags || ['home-office', 'pets']
-            })
-
-            const initialImages = data.gallery && data.gallery.length > 0 
-              ? data.gallery 
-              : data.image ? [data.image] : []
-            setImages(initialImages)
-          }
+          if (!res.error && res.data) data = res.data
         } catch (err) {
-          console.error(err)
+          console.warn('Supabase offline ao carregar edição, usando armazenamento local.')
+        }
+
+        if (!data) {
+          data = getStoredPropertyById(id)
+        }
+
+        if (data) {
+          setFormData({
+            title: data.title || '',
+            type: data.type || 'VENDA',
+            category: data.category || 'Apartamento',
+            city: data.city || 'Taubaté',
+            neighborhood: data.neighborhood || 'Jardim das Nações',
+            cep: data.cep || '',
+            address: data.address || '',
+            number: data.number || '',
+            complement: data.complement || '',
+            priceNum: data.price_num ? data.price_num.toString() : '',
+            condoFee: data.condo_fee ? data.condo_fee.toString() : '',
+            iptu: data.iptu ? data.iptu.toString() : '',
+            beds: data.beds ?? 3,
+            suites: data.suites ?? 1,
+            baths: data.baths ?? 2,
+            parking: data.parking ?? 2,
+            area: data.area || '',
+            description: data.description || '',
+            videoUrl: data.video_url || '',
+            featured: data.featured || false,
+            status: data.status || 'ativo',
+            amenities: data.amenities || data.tags || ['home-office', 'pets']
+          })
+
+          const initialImages = data.gallery && data.gallery.length > 0 
+            ? data.gallery 
+            : data.image ? [data.image] : []
+          setImages(initialImages)
         }
       }
     }
@@ -267,38 +273,24 @@ export default function PropertyFormPage() {
         propertyData.created_at = new Date().toISOString()
       }
 
-      console.log('Dados que serão salvos:', propertyData)
+      // 1. Salva sempre no armazenamento local primeiro (garantia imediata)
+      const savedLocal = saveStoredProperty(propertyData, isEdit ? id : null)
+      console.log('Imóvel salvo no armazenamento local:', savedLocal)
 
-      // Tenta salvar no Supabase primeiro
-      let error
-      let savedProperty = null
-
-      if (isEdit) {
-        console.log('Modo edição, atualizando imóvel no Supabase...')
-        const res = await supabase.from('properties').update(propertyData).eq('id', id)
-        error = res.error
-        savedProperty = res.data?.[0]
-        console.log('Resultado edição Supabase:', res)
-      } else {
-        console.log('Modo criação, inserindo novo imóvel no Supabase...')
-        const res = await supabase.from('properties').insert(propertyData).select()
-        error = res.error
-        savedProperty = res.data?.[0]
-        console.log('Resultado inserção Supabase:', res)
+      // 2. Se o Supabase estiver ativo, sincroniza com o banco na nuvem
+      if (!isLocalMode) {
+        try {
+          if (isEdit) {
+            const res = await supabase.from('properties').update(propertyData).eq('id', id)
+            if (res.error) console.warn('Aviso Supabase update:', res.error)
+          } else {
+            const res = await supabase.from('properties').insert(propertyData).select()
+            if (res.error) console.warn('Aviso Supabase insert:', res.error)
+          }
+        } catch (dbErr) {
+          console.warn('Supabase indisponível — mantido no armazenamento local:', dbErr)
+        }
       }
-
-      if (error) {
-        console.error('Erro ao salvar no Supabase:', error)
-        toast.error(`Erro ao salvar no banco: ${error.message}`)
-        setLoading(false)
-        return
-      }
-
-      console.log('Imóvel salvo no Supabase com sucesso:', savedProperty)
-
-      // Salva também no localStorage como backup
-      const savedLocal = saveStoredProperty(propertyData, isEdit ? id : savedProperty?.id)
-      console.log('Imóvel persistido no armazenamento local:', savedLocal)
 
       await logAuditEvent({
         userId: user?.id,

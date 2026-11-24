@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { BedDouble, Car, Maximize2, MapPin, Heart, ArrowRight } from 'lucide-react'
-import { PROPERTIES } from '../../data'
+import { getStoredProperties } from '../../lib/propertiesStorage'
+import { useFavorites } from '../../hooks/useFavorites'
 
 export default function FeaturedProperties() {
   const [activeTab, setActiveTab] = useState('todos')
-  const [favorites, setFavorites] = useState(new Set())
+  const { isFavorite, toggleFavorite } = useFavorites()
+
+  const allProperties = useMemo(() => {
+    return getStoredProperties().filter(p => p.status === 'ativo' || !p.status)
+  }, [])
 
   const tabs = [
     { id: 'todos', label: 'Todos' },
@@ -14,16 +19,13 @@ export default function FeaturedProperties() {
     { id: 'LANÇAMENTO', label: 'Lançamentos' },
   ]
 
-  const filtered = activeTab === 'todos'
-    ? PROPERTIES
-    : PROPERTIES.filter(p => p.type === activeTab)
+  const filtered = (activeTab === 'todos'
+    ? allProperties
+    : allProperties.filter(p => p.type === activeTab)
+  ).slice(0, 6)
 
   function toggleFav(id) {
-    setFavorites(prev => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
-      return next
-    })
+    toggleFavorite(id)
   }
 
   const badgeClass = (type) => {
@@ -82,7 +84,7 @@ export default function FeaturedProperties() {
                   className="absolute top-4 right-4 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm hover:scale-110 transition-transform"
                   aria-label="Favoritar"
                 >
-                  <Heart size={16} fill={favorites.has(p.id) ? '#C9952A' : 'none'} stroke={favorites.has(p.id) ? '#C9952A' : 'currentColor'} className="text-warm-500" />
+                  <Heart size={16} fill={isFavorite(p.id) ? '#C9952A' : 'none'} stroke={isFavorite(p.id) ? '#C9952A' : 'currentColor'} className="text-warm-500" />
                 </button>
                 {/* New badge */}
                 {p.isNew && (

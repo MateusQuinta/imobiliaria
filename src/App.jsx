@@ -12,7 +12,9 @@ import ContatoPage from './pages/ContatoPage'
 import StyleGuide from './pages/StyleGuide'
 import SejaUmCorretorPage from './pages/SejaUmCorretorPage/index'
 import BrokerPublicProfilePage from './pages/BrokerPublicProfilePage/index'
+import FavoritosPage from './pages/FavoritosPage/index'
 import NotFoundPage from './pages/NotFoundPage'
+import WhatsAppFloat from './components/WhatsAppFloat'
 
 // Autenticação e Status
 import LoginPage from './pages/Admin/LoginPage'
@@ -55,6 +57,7 @@ export default function App() {
             <Route path="/vender" element={<ContatoPage />} />
             <Route path="/seja-um-corretor" element={<SejaUmCorretorPage />} />
             <Route path="/corretor/:id" element={<BrokerPublicProfilePage />} />
+            <Route path="/favoritos" element={<FavoritosPage />} />
             <Route path="/style-guide" element={<StyleGuide />} />
             
             {/* Rotas de Autenticação & Status */}
@@ -112,6 +115,7 @@ export default function App() {
             {/* Página 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          <WhatsAppFloat />
         </BrowserRouter>
       </AuthProvider>
     </HelmetProvider>

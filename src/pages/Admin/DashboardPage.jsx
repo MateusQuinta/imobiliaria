@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import {
-  getMockProperties,
   getMockLeads,
   getMockBrokers,
   getMockVisits,
   getMockCommissions
 } from '../../lib/localAuth'
+import { getStoredProperties } from '../../lib/propertiesStorage'
 import {
   Building2,
   Kanban,
@@ -48,7 +48,7 @@ export default function DashboardPage() {
         if (isLocalMode) {
           // === Modo Local — dados mock ===
           const userId = profile?.id
-          const allProps = getMockProperties(isAdmin ? null : userId)
+          const allProps = getStoredProperties(isAdmin ? null : userId)
           const allLeads = getMockLeads(isAdmin ? null : userId)
           const allVisits = getMockVisits(isAdmin ? null : userId)
           const allComms = getMockCommissions(isAdmin ? null : userId)

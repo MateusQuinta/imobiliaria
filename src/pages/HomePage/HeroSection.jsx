@@ -12,7 +12,10 @@ export default function HeroSection() {
     const params = new URLSearchParams()
     if (tab === 'alugar') params.set('tipo', 'aluguel')
     else params.set('tipo', 'venda')
+    if (form.busca) params.set('busca', form.busca)
     if (form.tipo) params.set('categoria', form.tipo)
+    if (form.preco) params.set('preco', form.preco)
+    if (form.quartos) params.set('quartos', form.quartos)
     navigate(`/imoveis?${params.toString()}`)
   }
 
