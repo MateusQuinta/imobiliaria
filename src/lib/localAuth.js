@@ -1,9 +1,19 @@
 /**
  * Sistema de Autenticação Local (Fallback/Desenvolvimento)
  * Usado quando o Supabase não está disponível
+ * 
+ * ⚠️ AVISO: Este modo é apenas para desenvolvimento local.
+ * Não deve ser usado em produção.
  */
 
+// Verificar se está em produção
+if (import.meta.env.PROD) {
+  console.error('Modo local não permitido em produção!')
+  // Em produção, não permitir modo local
+}
+
 // Usuários pré-definidos para desenvolvimento/demonstração
+// ⚠️ APENAS PARA DESENVOLVIMENTO - NÃO USAR EM PRODUÇÃO
 const MOCK_USERS = [
   {
     id: 'admin-001',
