@@ -8,18 +8,15 @@ import {
   updateStoredPropertyStatus, 
   deleteStoredProperty 
 } from '../../lib/propertiesStorage'
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Eye, 
-  Building2, 
-  Search, 
-  CheckCircle2, 
-  PauseCircle, 
+import {
+  Plus,
+  Edit,
+  Eye,
+  Building2,
+  Search,
+  PauseCircle,
   PlayCircle,
-  Award,
-  ExternalLink
+  Award
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 

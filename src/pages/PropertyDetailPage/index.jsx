@@ -18,7 +18,6 @@ import {
   ChevronRight,
   X,
   Images,
-  Calendar,
 } from 'lucide-react'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
@@ -26,10 +25,8 @@ import SEOHelmet from '../../components/SEOHelmet'
 import LazyImage from '../../components/LazyImage'
 import { getStoredProperties, getStoredPropertyById } from '../../lib/propertiesStorage'
 import { useFavorites } from '../../hooks/useFavorites'
-import { useAuth } from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
 import { submitPropertyInquiry } from '../../lib/api'
-import { supabase } from '../../lib/supabase'
 
 export default function PropertyDetailPage() {
   const { id } = useParams()
@@ -37,29 +34,40 @@ export default function PropertyDetailPage() {
   const [loading, setLoading] = useState(true)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const { toggleFavorite, isFavorite } = useFavorites()
-  const { isLocalMode } = useAuth()
 
-  // Buscar imóvel do Supabase ou armazenamento local
+  // Carrega imediatamente do localStorage (sem depender de auth/Supabase)
+  // Tenta Supabase em background se disponível
   useEffect(() => {
-    async function fetchProperty() {
-      setLoading(true)
-      if (isLocalMode) {
-        const localProperty = getStoredPropertyById(id)
-        setProperty(localProperty)
-        setLoading(false)
-        return
-      }
+    // 1) Carrega do localStorage imediatamente para não travar
+    const local = getStoredPropertyById(id)
+    if (local) {
+      setProperty(local)
+      setLoading(false)
+    }
+
+    // 2) Tenta Supabase em background com timeout curto
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 3000)
+
+    async function trySupabase() {
       try {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+        if (!supabaseUrl || supabaseUrl.includes('mock') || supabaseUrl.includes('your-project')) {
+          if (!local) setLoading(false)
+          return
+        }
+        // Dynamic import to avoid blocking render
+        const { supabase } = await import('../../lib/supabase')
         const { data, error } = await supabase
           .from('properties')
           .select('*')
           .eq('id', id)
+          .abortSignal(controller.signal)
           .single()
-        
-        if (error || !data) {
-          const localProperty = getStoredPropertyById(id)
-          setProperty(localProperty)
-        } else {
+
+        clearTimeout(timeout)
+
+        if (!error && data) {
           const gallery = Array.isArray(data.gallery) && data.gallery.length > 0
             ? data.gallery
             : (data.image ? [data.image] : [])

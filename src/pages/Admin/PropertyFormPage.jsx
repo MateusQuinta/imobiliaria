@@ -5,17 +5,13 @@ import { useAuth } from '../../hooks/useAuth'
 import { getAgencySettings, logAuditEvent } from '../../lib/api'
 import { saveStoredProperty, getStoredPropertyById } from '../../lib/propertiesStorage'
 import ImageUploader from '../../components/Admin/ImageUploader'
-import { 
-  Building2, 
-  MapPin, 
-  DollarSign, 
-  BedDouble, 
-  Bath, 
-  Car, 
-  Maximize2, 
-  Video, 
-  ShieldCheck, 
-  Save, 
+import {
+  Building2,
+  MapPin,
+  Maximize2,
+  Video,
+  ShieldCheck,
+  Save,
   ArrowLeft,
   Check
 } from 'lucide-react'
@@ -273,24 +269,47 @@ export default function PropertyFormPage() {
         propertyData.created_at = new Date().toISOString()
       }
 
-      // 1. Salva sempre no armazenamento local primeiro (garantia imediata)
-      const savedLocal = saveStoredProperty(propertyData, isEdit ? id : null)
-      console.log('Imóvel salvo no armazenamento local:', savedLocal)
+      console.log('Dados que serão salvos:', propertyData)
+      console.log('isLocalMode:', isLocalMode)
 
-      // 2. Se o Supabase estiver ativo, sincroniza com o banco na nuvem
+      // Tenta salvar no Supabase primeiro (se não estiver em modo local)
+      let error = null
+      let savedProperty = null
+
       if (!isLocalMode) {
+        console.log('Tentando salvar no Supabase...')
         try {
           if (isEdit) {
-            const res = await supabase.from('properties').update(propertyData).eq('id', id)
-            if (res.error) console.warn('Aviso Supabase update:', res.error)
+            const res = await supabase.from('properties').update(propertyData).eq('id', id).select()
+            error = res.error
+            savedProperty = res.data?.[0]
+            console.log('Resultado edição Supabase:', res)
           } else {
             const res = await supabase.from('properties').insert(propertyData).select()
-            if (res.error) console.warn('Aviso Supabase insert:', res.error)
+            error = res.error
+            savedProperty = res.data?.[0]
+            console.log('Resultado inserção Supabase:', res)
           }
         } catch (dbErr) {
-          console.warn('Supabase indisponível — mantido no armazenamento local:', dbErr)
+          console.error('Erro ao salvar no Supabase:', dbErr)
+          error = dbErr
         }
+
+        if (error) {
+          console.error('Erro ao salvar no Supabase:', error)
+          toast.error(`Erro ao salvar no banco: ${error.message}`)
+          setLoading(false)
+          return
+        }
+
+        console.log('Imóvel salvo no Supabase com sucesso:', savedProperty)
+      } else {
+        console.log('Modo local - salvando apenas no localStorage')
       }
+
+      // Salva também no localStorage como backup
+      const savedLocal = saveStoredProperty(propertyData, isEdit ? id : savedProperty?.id)
+      console.log('Imóvel persistido no armazenamento local:', savedLocal)
 
       await logAuditEvent({
         userId: user?.id,
