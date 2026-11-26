@@ -4,11 +4,13 @@ import SEOHelmet from '../../components/SEOHelmet'
 import HeroSection from './HeroSection'
 import FeaturedProperties from './FeaturedProperties'
 import LifestyleSearch from './LifestyleSearch'
-import StatsSection from './StatsSection'
-import FinancingTools from './FinancingTools'
 import ListingCTA from './ListingCTA'
-import Testimonials from './Testimonials'
-import BlogSection from './BlogSection'
+
+// Componentes removidos temporariamente (dados fictícios)
+// import StatsSection from './StatsSection'
+// import FinancingTools from './FinancingTools'
+// import Testimonials from './Testimonials'
+// import BlogSection from './BlogSection'
 
 export default function HomePage() {
   return (
@@ -19,11 +21,7 @@ export default function HomePage() {
         <HeroSection />
         <FeaturedProperties />
         <LifestyleSearch />
-        <StatsSection />
-        <FinancingTools />
         <ListingCTA />
-        <Testimonials />
-        <BlogSection />
       </main>
       <Footer />
     </>

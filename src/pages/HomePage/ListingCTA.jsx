@@ -4,7 +4,7 @@ import { CheckCircle } from 'lucide-react'
 const BENEFITS = [
   'Avaliação gratuita em até 48h',
   'Fotos profissionais sem custo',
-  'Alcance de mais de 10.000 compradores',
+  'Alcance de compradores qualificados',
   'Corretor dedicado do anúncio ao fechamento',
 ]
 
@@ -37,8 +37,8 @@ export default function ListingCTA() {
             ))}
           </ul>
           <div className="mt-10 bg-navy-900 rounded-2xl p-6 text-white">
-            <p className="font-serif text-2xl font-semibold">98% dos nossos imóveis</p>
-            <p className="text-white/60 mt-1 text-sm">vendem ou alugam em menos de 60 dias</p>
+            <p className="font-serif text-2xl font-semibold">Atendimento personalizado</p>
+            <p className="text-white/60 mt-1 text-sm">Do início ao fim do processo</p>
           </div>
         </div>
 

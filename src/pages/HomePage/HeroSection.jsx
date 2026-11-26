@@ -40,7 +40,7 @@ export default function HeroSection() {
           Seu novo capítulo<br />começa aqui.
         </h1>
         <p className="text-lg md:text-xl font-light text-white/70 mt-6 max-w-xl leading-relaxed">
-          Mais de 1.400 imóveis de médio e alto padrão em Taubaté e no Vale do Paraíba. Com atendimento humano do início ao fim.
+          Imóveis de médio e alto padrão em Taubaté e no Vale do Paraíba. Com atendimento humano do início ao fim.
         </p>
       </div>
 
